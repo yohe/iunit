@@ -11,28 +11,30 @@ using namespace iunit;
 
 class SampleTest : public CppTestCase {
 public:
-    SampleTest() : CppTestCase() {
+    SampleTest() : CppTestCase("Sample") {
     }
 
     virtual void setup() {}
     virtual void teardown() {}
 
     void test_plus() {
+        IUNIT_MESSAGE( "Test Plus" );
     }
     void test_minus() {
     }
     
     virtual void init() {
-        ADD_TEST(SampleTest::test_plus);
-        ADD_TEST(SampleTest::test_minus);
+        IUNIT_ADD_TEST( SampleTest::test_plus );
+        IUNIT_ADD_TEST( SampleTest::test_minus );
         //addTest(this, &SampleTest::test_plus , "SampleTest::test_plus" );
     }
 };
 
+
 int main(int argc, char const* argv[])
 {
     CppTestResultCollector collector;
-    CppTestSuite suite(&collector);
+    CppTestSuite suite("TestSuite", &collector);
     suite.addTest(new SampleTest());
     suite.run();
 

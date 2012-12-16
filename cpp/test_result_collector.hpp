@@ -1,5 +1,5 @@
-#ifndef CPP_TEST_RESULT_COLLECTOR_HPP
-#define CPP_TEST_RESULT_COLLECTOR_HPP
+#ifndef IUNIT_CPP_TEST_RESULT_COLLECTOR_HPP
+#define IUNIT_CPP_TEST_RESULT_COLLECTOR_HPP
 
 #include <vector>
 #include "detail/test_result.hpp"
@@ -16,6 +16,10 @@ namespace iunit {
         {
         }
         virtual ~CppTestResultCollector() {
+            clear();
+        }
+        
+        virtual void clear() {
             std::vector<TestResult*>::iterator ite = _testResult.begin();
             for(; ite != _testResult.end(); ite++) {
                 delete *ite;

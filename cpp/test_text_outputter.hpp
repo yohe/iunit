@@ -1,6 +1,6 @@
 
-#ifndef CPP_TEST_TEXT_OUTPUTTER_HPP
-#define CPP_TEST_TEXT_OUTPUTTER_HPP
+#ifndef IUNIT_CPP_TEST_TEXT_OUTPUTTER_HPP
+#define IUNIT_CPP_TEST_TEXT_OUTPUTTER_HPP
 
 #include <fstream>
 #include "detail/test_outputter.hpp"

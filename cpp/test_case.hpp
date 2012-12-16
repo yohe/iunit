@@ -1,12 +1,11 @@
 
-#ifndef CPP_TEST_CASE_HPP
-#define CPP_TEST_CASE_HPP
+#ifndef IUNIT_CPP_TEST_CASE_HPP
+#define IUNIT_CPP_TEST_CASE_HPP
 
 #include <string>
 #include <vector>
 #include "detail/test_caller.hpp"
-
-#define TO_STRING(T) #T
+#include "detail/test_exception.hpp"
 
 namespace iunit {
 
@@ -18,32 +17,44 @@ namespace iunit {
         std::vector<TestRunnable*> _children;
 
     protected:
-        virtual void run(CppTestResultCollector* collector) {
+        virtual void run(TestResult* parentResult) {
             clear();
             init();
             setup();
 
-            //try {
-                std::vector<TestMethod*>::iterator ite = _testMethods.begin();
-                std::vector<TestMethod*>::iterator end = _testMethods.end();
-                for(; ite != end; ite++) {
+            TestResult* result = new TestResult();
+            std::vector<TestMethod*>::iterator ite = _testMethods.begin();
+            std::vector<TestMethod*>::iterator end = _testMethods.end();
+            for(; ite != end; ite++) {
+                try {
                     (*ite)->call();
+                } catch (ErrorException& e) {
+                    // TODO Result
+                    return;
                 }
+            }
 
-                std::vector<TestRunnable*>::iterator ite2 = _children.begin();
-                std::vector<TestRunnable*>::iterator end2 = _children.begin();
-                for(; ite2 != end2; ite2++) {
-                    (*ite2)->run(collector);
+            std::vector<TestRunnable*>::iterator ite2 = _children.begin();
+            std::vector<TestRunnable*>::iterator end2 = _children.begin();
+            for(; ite2 != end2; ite2++) {
+                try {
+                    (*ite2)->run(result);
+                } catch (ErrorException& e) {
+                    // TODO Result
+                    continue;;
                 }
-            //} catch (TestException& e) {
-
-            //}
+            }
+            
+            parentResult->add(result);
 
             teardown();
         }
         
     public:
-        CppTestCase() { }
+        CppTestCase(const std::string& name) 
+            : TestRunnable(name)
+        {
+        }
         virtual ~CppTestCase() { clear(); }
         
         void clear() {
@@ -63,23 +74,19 @@ namespace iunit {
 
         template <class T>
         void addTest(T* instance, void (T::*method)(), std::string name);
-        virtual void addTest(TestRunnable* test);
+        virtual void addTest(CppTestCase* test);
         
         virtual TestRunnable* getTest() { return this; }
 
-        virtual void setup() = 0;
-        virtual void teardown() = 0;
-        virtual void init() = 0;
     };
 
     template<class T>
     void CppTestCase::addTest(T* instance, void (T::*method)(), std::string name) {
-        std::cout << name << std::endl;
-        TestMethod* testMethod = new TestMethod(instance, method);
+        TestMethod* testMethod = new TestMethod(instance, method, name);
         _testMethods.push_back(testMethod);
     }
     
-    void CppTestCase::addTest(TestRunnable* test) {
+    void CppTestCase::addTest(CppTestCase* test) {
         _children.push_back(test);
     }
 };
