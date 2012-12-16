@@ -38,6 +38,10 @@ namespace iunit {
 
         virtual void write(TestOutputter* outputter) {
         }
+        
+        virtual size_t size() const {
+            return _testResult.size();
+        }
     protected:
         std::vector<TestResult*> _testResult;
         bool _isSuccess;

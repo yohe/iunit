@@ -11,7 +11,7 @@ using namespace iunit;
 
 class SampleTest : public CppTestCase {
 public:
-    SampleTest() : CppTestCase("Sample") {
+    SampleTest() : CppTestCase("SampleTest") {
     }
 
     virtual void setup() {}
@@ -30,6 +30,16 @@ public:
     }
 };
 
+class SampleSuite : public CppTestSuite {
+public:
+    SampleSuite(const std::string& name, CppTestResultCollector* collector = NULL) 
+        : CppTestSuite(name, collector)
+    {
+    }
+    virtual void init() {
+        addTest(new SampleTest());
+    }
+};
 
 int main(int argc, char const* argv[])
 {
@@ -38,9 +48,13 @@ int main(int argc, char const* argv[])
     suite.addTest(new SampleTest());
     suite.run();
 
+    //original test suite
+    SampleSuite sampleSuite("SampleSuite", &collector);
+    sampleSuite.run();
+
     std::ofstream ofs("result.txt");
     TextOutputter outputter(ofs);
     collector.write(&outputter);
-    return collector.isSuccessful();
+    return (collector.isSuccessful() ? 0 : -1);
 }
 

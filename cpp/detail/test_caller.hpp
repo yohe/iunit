@@ -114,6 +114,8 @@ namespace iunit {
             void call() {
                 _methodObj->call();
             }
+            
+            std::string getName() const { return _name; }
 
         private:
             _TestMethod_base* _methodObj;
