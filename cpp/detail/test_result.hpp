@@ -1,11 +1,16 @@
 #ifndef IUNIT_CPP_DETAIL_TEST_RESULT_HPP
 #define IUNIT_CPP_DETAIL_TEST_RESULT_HPP
 
+#include <vector>
+#include <string>
+#include <sstream>
+#include <ostream>
+
 namespace iunit {
     namespace detail {
         class TestResult {
         public:
-            TestResult() : _name(""), _success(0), _failed(0)
+            TestResult(const std::string& name = "") : _testName(name), _success(0), _failed(0)
             {
             }
             
@@ -21,20 +26,53 @@ namespace iunit {
             }
             
             bool isSuccess() const {
-                return true;
+                if(_failed == 0) {
+                    return true;
+                }
+                return false;
             }
             
             void add(TestResult* child) {
+                _success+=child->_success;
+                _failed+=child->_failed;
                 _results.push_back(child);
+            }
+            
+            std::string testName() {
+                return _testName;
             }
 
             void set(const std::string& name, size_t success, size_t failed) {
+                _testName = name;
+                _success += success;
+                _failed += failed;
             }
 
-            std::string _name;
+            std::ostream& getOstream() {
+                return _oss;
+            }
+            
+            void addMessage(const std::string& str) {
+                if(_oss.tellp() != 0) {
+                    _oss << std::endl;
+                }
+                _oss << str;
+            }
+            
+            const std::string message() {
+                return _oss.str();
+            }
+
+            std::string _testName;
             size_t _success;
             size_t _failed;
             std::vector<TestResult*> _results;
+            std::ostringstream _oss;
+            
+            void printOn( std::ostream& os ) {
+                os << "Name = " << _testName << " success = " << _success
+                   << " failed = " << _failed << std::endl;
+            }
         };
     };
 };

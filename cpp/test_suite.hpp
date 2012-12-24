@@ -4,7 +4,8 @@
 
 #include "test_case.hpp"
 #include "test_result_collector.hpp"
-#include "detail/test_caller.hpp"
+#include "detail/test_runnable.hpp"
+#include "detail/test_method.hpp"
 #include "detail/test_exception.hpp"
 
 namespace iunit {
@@ -12,6 +13,11 @@ namespace iunit {
     using namespace detail;
 
     class CppTestSuite : public TestRunnable {
+    protected:
+        std::string _name;                          // Suite Name
+        CppTestResultCollector* _collector;         
+        std::vector<CppTestCase*> _testCases;       // TestCase in Suite
+
     public:
         CppTestSuite(const std::string& name, CppTestResultCollector* collector = NULL) 
             : TestRunnable(name),
@@ -19,9 +25,9 @@ namespace iunit {
         { }
         
         virtual ~CppTestSuite() {
-            if(_collector != NULL) {
-                _collector->clear();
-            }
+            //if(_collector != NULL) {
+            //    _collector->clear();
+            //}
 
             std::vector<CppTestCase*>::iterator ite = _testCases.begin();
             std::vector<CppTestCase*>::iterator end = _testCases.end();
@@ -31,12 +37,16 @@ namespace iunit {
             }
             _testCases.clear();
         }
-        void run() {
+        void start() {
             init();
-            std::cout << getName() << " start. " << std::endl;
-            TestResult* suiteResult = new TestResult();
+            TestResult* suiteResult = new TestResult(getName());
+            std::cout << "[ RUN      ] " << getName() << std::endl;
             run(suiteResult);
-            std::cout << std::endl;
+            if( suiteResult->isSuccess() ) {
+                std::cout << "[       OK ] " << getName() << std::endl;
+            } else {
+                std::cout << "[  FAILED  ] " << getName() << std::endl;
+            }
             _collector->addResult(suiteResult);
         }
 
@@ -44,43 +54,36 @@ namespace iunit {
             _testCases.push_back(test);
         }
 
-        virtual void init() {}
+        virtual void init() {
+        }
 
     protected:
 
-        virtual void run(TestResult* parentResult) {
-            try {
+        virtual void runImpl(TestResult* suiteResult) {
                 std::vector<CppTestCase*>::iterator test = _testCases.begin();
 
-                TestResult* result = new TestResult();
                 for(; test != _testCases.end(); test++) {
-                    std::cout << "  " << (*test)->getName() << std::endl;
-                    (*test)->run(result);
-                    if((*test)->isSuccessful()) {
-                        std::cout << "  Success!" << std::endl;
-                    } else {
-                        std::cout << "  Failed!" << std::endl;
+                    std::cout << "[ RUN      ] " << (*test)->getName() << std::endl;
+                    TestResult* result = new TestResult((*test)->getName());
+                    try {
+                        (*test)->run(result);
+                    } catch (AssertException& e) {
+                        suiteResult->add(result);
+                        std::cout << "[  FAILED  ] " << (*test)->getName() << std::endl;
+                        break;
                     }
-                    result->set((*test)->getName(), (*test)->getSuccessCount(), (*test)->getFailedCount());
-
-                    parentResult->add(result);
+                    suiteResult->add(result);
+                    
+                    if( result->isSuccess() ) {
+                        std::cout << "[       OK ] " << (*test)->getName() << std::endl;
+                    } else {
+                        std::cout << "[  FAILED  ] " << (*test)->getName() << std::endl;
+                    }
+                    //result->set((*test)->getName(), (*test)->getSuccessCount(), (*test)->getFailedCount());
                 }
 
-                if(result->isSuccess()) {
-                    std::cout << "Success!" << std::endl;
-                } else {
-                    std::cout << "Failed!" << std::endl;
-                }
-            } catch (AssertException& e) {
-                TestResult* childResult = new TestResult();
-                parentResult->add(childResult);
-            }
 
         }
-
-        std::string _name;
-        CppTestResultCollector* _collector;
-        std::vector<CppTestCase*> _testCases;
     };
 
 };

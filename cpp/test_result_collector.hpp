@@ -10,6 +10,10 @@ namespace iunit {
     using namespace detail;
 
     class CppTestResultCollector {
+    protected:
+        std::vector<TestResult*> _rootResult;
+        bool _isSuccess;
+
     public:
         CppTestResultCollector() :
             _isSuccess(true)
@@ -20,16 +24,16 @@ namespace iunit {
         }
         
         virtual void clear() {
-            std::vector<TestResult*>::iterator ite = _testResult.begin();
-            for(; ite != _testResult.end(); ite++) {
+            std::vector<TestResult*>::iterator ite = _rootResult.begin();
+            for(; ite != _rootResult.end(); ite++) {
                 delete *ite;
             }
-            _testResult.clear();
+            _rootResult.clear();
         }
 
         virtual void addResult(TestResult* ret) {
             _isSuccess &= ret->isSuccess();
-            _testResult.push_back(ret);
+            _rootResult.push_back(ret);
         }
         
         virtual bool isSuccessful() const {
@@ -37,14 +41,35 @@ namespace iunit {
         }
 
         virtual void write(TestOutputter* outputter) {
+            outputter->start();
+            std::vector<TestResult*>::iterator ite = _rootResult.begin();
+            std::vector<TestResult*>::iterator end = _rootResult.end();
+            for(; ite != end; ite++) {
+                output(outputter, *ite);
+            }
+            outputter->end();
         }
         
         virtual size_t size() const {
-            return _testResult.size();
+            return _rootResult.size();
         }
+
     protected:
-        std::vector<TestResult*> _testResult;
-        bool _isSuccess;
+        virtual void output(TestOutputter* outputter, TestResult* result) {
+            if(result->_results.empty()) {
+                outputter->write(result);
+                return;
+            }
+
+            outputter->start(result);
+            std::vector<TestResult*>::iterator ite = result->_results.begin();
+            std::vector<TestResult*>::iterator end = result->_results.end();
+            for(; ite != end; ite++) {
+                output(outputter, *ite);
+            }
+            outputter->end(result);
+
+        }
     };
 
 };
