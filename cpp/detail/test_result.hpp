@@ -10,7 +10,11 @@ namespace iunit {
     namespace detail {
         class TestResult {
         public:
-            TestResult(const std::string& name = "") : _testName(name), _success(0), _failed(0)
+            TestResult(const std::string& testName, const std::string testMethod = "") :
+                _testName(testName),
+                _testMethod(testMethod),
+                _success(0),
+                _failed(0)
             {
             }
             
@@ -41,6 +45,9 @@ namespace iunit {
             std::string testName() {
                 return _testName;
             }
+            std::string testMethodName() {
+                return _testMethod;
+            }
 
             void set(const std::string& name, size_t success, size_t failed) {
                 _testName = name;
@@ -64,6 +71,7 @@ namespace iunit {
             }
 
             std::string _testName;
+            std::string _testMethod;
             size_t _success;
             size_t _failed;
             std::vector<TestResult*> _results;

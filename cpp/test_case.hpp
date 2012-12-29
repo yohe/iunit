@@ -80,7 +80,7 @@ namespace iunit {
         std::vector<TestMethod*>::iterator end = _testMethods.end();
         for(; ite != end; ite++) {
             //TestResult* result = new TestResult((*ite)->methodName());
-            TestResult* methodResult = new TestResult((*ite)->getName());
+            TestResult* methodResult = new TestResult(getName(), (*ite)->getName());
             try {
                 (*ite)->run(methodResult);
                 testCaseResult->add(methodResult);

@@ -57,8 +57,8 @@ namespace iunit {
             }
 
             _os << indent
-                << "<testcase name=\"" << result->testName()
-                << "\" classname=\"" << ""
+                << "<testcase name=\"" << result->testMethodName()
+                << "\" classname=\"" << result->testName()
                 << "\" time=\"" << 0 << "\">" << std::endl;
 
             if(!result->isSuccess()) {

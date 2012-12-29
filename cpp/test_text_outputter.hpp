@@ -46,7 +46,7 @@ namespace iunit {
             } else {
                 _os << "X";
             }
-            _os << indent << " " << result->testName() << std::endl;
+            _os << indent << " " << result->testMethodName() << std::endl;
 
             std::string message = result->message();
             std::string messageIndent = indent+indent+ "   ";

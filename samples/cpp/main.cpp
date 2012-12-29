@@ -81,8 +81,8 @@ int main(int argc, char const* argv[])
     //sampleSuite.run();
 
     std::ofstream ofs("result.txt");
-    TextOutputter outputter(ofs);
-    JUnitOutputter outputter2(std::cout);
+    TextOutputter outputter(std::cout);
+    JUnitOutputter outputter2(ofs);
     collector.write(&outputter2);
     collector.write(&outputter);
     return (collector.isSuccessful() ? 0 : -1);
