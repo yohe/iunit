@@ -120,8 +120,8 @@ int main(int argc, char const* argv[])
     suite.start();
 
     //original test suite
-    SampleSuite sampleSuite("SampleSuite", &collector);
-    sampleSuite.start();
+    //SampleSuite sampleSuite("SampleSuite", &collector);
+    //sampleSuite.start();
 
     std::ofstream xml_ofs("result.xml");
     std::ofstream ofs("result.txt");
