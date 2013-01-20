@@ -6,6 +6,8 @@
 #include <sstream>
 #include <ostream>
 
+//#include "detail/test_outputter.hpp"
+
 namespace iunit {
     namespace detail {
         class TestResult {
@@ -28,6 +30,10 @@ namespace iunit {
 
                 _results.clear();
             }
+            
+            //virtual void output(TestOutputter* outputter, bool last = false) {
+            //    
+            //}
             
             bool isSuccess() const {
                 if(_failed == 0) {

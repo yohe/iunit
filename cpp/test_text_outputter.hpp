@@ -13,45 +13,57 @@ namespace iunit {
     public:
         TextOutputter(std::ostream& os) : _os(os), _indentCount(0) {}
 
-        virtual void start(TestResult* result = NULL) {
+        virtual void start(TestResult* result = NULL, bool last = false) {
             if(result == NULL) {
                 return;
             }
 
-            std::string indent;
+            std::string indent = "";
             for(int i = 0; i < _indentCount; ++i) {
-                indent += "  ";
+                if(i==0) {
+                    indent += "    ";
+                } else {
+                    indent += "  ";
+                }
             }
+            indent += " ";
             
-            _os << " ";
             if(result->isSuccess()) {
-                _os << " ";
+                _os << "[O]";
             } else {
-                _os << "X";
+                _os << "[X]";
             }
-            _os << indent << " " << result->testName() << std::endl;
+            _os << " " << indent << result->testName() << std::endl;
 
             _indentCount++;
         }
 
         virtual void write(TestResult* result) {
-            std::string indent;
+            std::string indent = "";
             for(int i = 0; i < _indentCount; ++i) {
-                indent += "  ";
+                if(i == (_indentCount-1)) {
+                    indent += "    ";
+                } else {
+                    indent += "    ";
+                }
             }
+            indent += " ";
 
-            _os << " ";
             if(result->isSuccess()) {
-                _os << " ";
+                _os << "[O]";
             } else {
-                _os << "X";
+                _os << "[X]";
             }
-            _os << indent << " " << result->testMethodName() << std::endl;
+            _os << " " << indent << result->testName() << std::endl;
 
-            std::string message = result->message();
-            std::string messageIndent = indent+indent+ "   ";
-            indentMessage(message, messageIndent);
-            _os << messageIndent << message << std::endl;
+            if(result->isSuccess()) {
+                // nop
+            } else {
+                std::string message = result->message();
+                std::string messageIndent = indent+indent+ " >  ";
+                indentMessage(message, messageIndent);
+                _os << messageIndent << message << std::endl;
+            }
         }
 
         virtual void end(TestResult* result = NULL) {

@@ -7,6 +7,9 @@
 #include "detail/test_runnable.hpp"
 #include "detail/test_method.hpp"
 #include "detail/test_exception.hpp"
+#include "detail/test_util.hpp"
+
+#include "test_fixture.hpp"
 
 namespace iunit {
 
@@ -37,16 +40,23 @@ namespace iunit {
             }
             _testCases.clear();
         }
-        void start() {
+        void start(TestFixture* fixture = NULL) {
+            // 全体のテスト結果を登録用変数を用意して
+            // テストの実行
+            // コレクタにテスト結果を渡して終了
             init();
             TestResult* suiteResult = new TestResult(getName());
-            std::cout << "[ RUN      ] " << getName() << std::endl;
-            run(suiteResult);
-            if( suiteResult->isSuccess() ) {
-                std::cout << "[       OK ] " << getName() << std::endl;
+            Util::printStartTest(getName());
+
+            if( fixture ) {
+                fixture->setup();
+                run(suiteResult);
+                fixture->teardown();
             } else {
-                std::cout << "[  FAILED  ] " << getName() << std::endl;
+                run(suiteResult);
             }
+
+            Util::printEndTest(getName(), suiteResult->isSuccess());
             _collector->addResult(suiteResult);
         }
 
@@ -62,27 +72,21 @@ namespace iunit {
         virtual void runImpl(TestResult* suiteResult) {
                 std::vector<CppTestCase*>::iterator test = _testCases.begin();
 
+                // 登録されている全てのテストを実行
+                // テストケース毎にテスト結果を登録
                 for(; test != _testCases.end(); test++) {
-                    std::cout << "[ RUN      ] " << (*test)->getName() << std::endl;
+                    Util::printStartTest((*test)->getName());
                     TestResult* result = new TestResult((*test)->getName());
                     try {
                         (*test)->run(result);
                     } catch (AssertException& e) {
                         suiteResult->add(result);
-                        std::cout << "[  FAILED  ] " << (*test)->getName() << std::endl;
+                        Util::printEndTest((*test)->getName(), false);
                         break;
                     }
                     suiteResult->add(result);
-                    
-                    if( result->isSuccess() ) {
-                        std::cout << "[       OK ] " << (*test)->getName() << std::endl;
-                    } else {
-                        std::cout << "[  FAILED  ] " << (*test)->getName() << std::endl;
-                    }
-                    //result->set((*test)->getName(), (*test)->getSuccessCount(), (*test)->getFailedCount());
+                    Util::printEndTest((*test)->getName(), result->isSuccess());
                 }
-
-
         }
     };
 

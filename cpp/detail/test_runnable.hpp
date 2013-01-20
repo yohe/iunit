@@ -20,7 +20,7 @@ namespace iunit {
                 _failed(0),
                 _name(name)
             {
-                _fixture = new NullFixture();
+                _fixture = new TestFixture();
             }
 
             TestRunnable(const std::string name, TestFixture* fixture) :

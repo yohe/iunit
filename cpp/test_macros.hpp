@@ -9,8 +9,8 @@
 using namespace iunit::detail;
 
 
-#define IUNIT_ADD_TEST(method) \
-    addTest(this, &method, #method)
+#define IUNIT_ADD_TEST( className, methodName ) \
+    addTest(this, &className::methodName, #className, #methodName)
 
 #define IUNIT_MESSAGE( message )   \
     //this->getResult().getOstream() << message << std::endl;
@@ -91,44 +91,6 @@ using namespace iunit::detail;
 
 #define IUNIT_ASSERT_NO_THROW( exception ) \
     IUNIT_DETAIL_TEST_THROW( exception, __FILE__, __LINE__, NO_THROW, ASSERT)
-
-//------------------------------------------------------------------------
-// Warning Check
-#define IUNIT_WARN_EQ(expected, actual) \
-    IUNIT_DETAIL_TEST(expected, actual, __FILE__, __LINE__, EQ, WARN)
-
-#define IUNIT_WARN_NE(expected, actual) \
-    IUNIT_DETAIL_TEST(expected, actual, __FILE__, __LINE__, NE, WARN)
-
-#define IUNIT_WARN_LE(expected, actual) \
-    IUNIT_DETAIL_TEST(expected, actual, __FILE__, __LINE__, LE, WARN)
-
-#define IUNIT_WARN_LT(expected, actual) \
-    IUNIT_DETAIL_TEST(expected, actual, __FILE__, __LINE__, LT,WARN)
-
-#define IUNIT_WARN_GE(expected, actual) \
-    IUNIT_DETAIL_TEST(expected, actual, __FILE__, __LINE__, GE, WARN)
-
-#define IUNIT_WARN_GT(expected, actual) \
-    IUNIT_DETAIL_TEST(expected, actual, __FILE__, __LINE__, GT,WARN)
-
-#define IUNIT_WARN_NULL( actual ) \
-    IUNIT_DETAIL_TEST(NULL, actual, __FILE__, __LINE__, NULL, WARN)
-
-#define IUNIT_WARN_NOT_NULL( actual ) \
-    IUNIT_DETAIL_TEST(NULL, actual, __FILE__, __LINE__, NOT_NULL, WARN)
-
-#define IUNIT_WARN_TRUE( condition ) \
-    IUNIT_DETAIL_TEST_COND(condition, __FILE__, __LINE__, TRUE, WARN)
-
-#define IUNIT_WARN_FALSE( condition ) \
-    IUNIT_DETAIL_TEST_COND(condition, __FILE__, __LINE__, FALSE, WARN)
-
-#define IUNIT_WARN_THROW( exception ) \
-    IUNIT_DETAIL_TEST_THROW( exception, __FILE__, __LINE__, THROW, WARN)
-
-#define IUNIT_WARN_NO_THROW( exception ) \
-    IUNIT_DETAIL_TEST_THROW( exception, __FILE__, __LINE__, NO_THROW, WARN)
 
 #endif /* end of include guard */
 

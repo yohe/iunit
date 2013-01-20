@@ -14,7 +14,7 @@ namespace iunit {
     public:
         JUnitOutputter(std::ostream& os) : TextOutputter(os), _index(0) {}
 
-        virtual void start(TestResult* result = NULL) {
+        virtual void start(TestResult* result = NULL, bool last = false) {
             assert(_indentCount < 2);
 
             if(result == NULL) {
@@ -22,23 +22,18 @@ namespace iunit {
                 return;
             }
             if(_indentCount == 0) {
-                _os << "<testsuites>" << std::endl;
+                _os << "<testsuites name=\"" << result->_testName << "\">" << std::endl;
             } else {
-                std::string iso_timestamp = "0";
 
                 std::string indent;
                 for(int i = 0; i < _indentCount; ++i) {
                     indent += "  ";
                 }
+                size_t tests = result->_success + result->_failed;
                 _os << indent 
-                    << "<testsuite tests=\"" << result->testName()
-                    << "\" failures=\"" << 0
+                    << "<testsuite tests=\"" << tests
                     << "\" errors=\"" << result->_failed
                     << "\" name=\"" << result->testName()
-                    << "\" time=\"" << 0
-                    << "\" timestamp=\"" << iso_timestamp
-                    << "\" hostname=\""
-                    << "\" package=\""
                     << "\" id=\"" << _index << "\" >" << std::endl;
 
                 _os << indent << indent << "<properties />" << std::endl;
@@ -57,14 +52,18 @@ namespace iunit {
             }
 
             _os << indent
-                << "<testcase name=\"" << result->testMethodName()
-                << "\" classname=\"" << result->testName()
-                << "\" time=\"" << 0 << "\">" << std::endl;
+                << "<testcase "
+                << "classname=\"" << result->testName()
+                << "\" name=\"" << result->testMethodName()
+                << "\">" << std::endl;
 
             if(!result->isSuccess()) {
                 _os  << indent << "  <failure message=\""
-                     << result->message() << "\" type=\"\"/>"
+                     << result->message() 
+                     << "\" type=\"\">"
                      << std::endl;
+                //_os << result->message() << std::endl;
+                _os << indent << "  </failure>" << std::endl;
             }
             _os << indent << "</testcase>" << std::endl;
         }

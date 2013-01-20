@@ -40,8 +40,10 @@ namespace iunit {
             };
             
             template <class T>
-            TestMethod(T* instance, void (T::*method)(), std::string name) :
-                TestRunnable( name )
+            TestMethod(T* instance, void (T::*method)(), std::string className, std::string methodName) :
+                TestRunnable( className ),
+                _className(className),
+                _methodName(methodName)
             {
                 _methodObj = new _TestMethod<T>(instance, method);
             }
@@ -50,27 +52,40 @@ namespace iunit {
                 delete _methodObj;
             }
             
+            virtual std::string className() {
+                return _className;
+            }
+            virtual std::string methodName() {
+                return _methodName;
+            }
+            
+            virtual std::string testName() {
+                std::string test = _className + "::" + _methodName;
+                return test;
+            }
+            
         protected:
 
             virtual void runImpl(TestResult* result) {
+                std::string test = testName();
                 try {
-                    std::cout << "[ RUN      ] " << getName() << std::endl;
+                    std::cout << "[ RUN      ] " << test << std::endl;
                     _methodObj->call(result);
-                    std::cout << "[       OK ] " << getName() << std::endl;
-                    result->set(getName(), 1, 0);
+                    std::cout << "[       OK ] " << test << std::endl;
+                    result->set(_className, 1, 0);
                 } catch (ErrorException& e) {
-                    std::cout << "[  FAILED  ] ## Error  --> " << getName() << std::endl;
-                    e.setTestName(getName());
+                    std::cout << "[  FAILED  ] ## Error  --> " << test << std::endl;
+                    e.setTestName(test);
                     std::cout << e.what() << std::endl;
                     result->addMessage(e.what());
-                    result->set(getName(), 0, 1);
+                    result->set(_className, 0, 1);
                     throw e;
                 } catch (AssertException& e) {
-                    std::cout << "[  FAILED  ] ## Assert --> " << getName() << std::endl;
-                    e.setTestName(getName());
+                    std::cout << "[  FAILED  ] ## Assert --> " << test << std::endl;
+                    e.setTestName(test);
                     std::cout << e.what() << std::endl;
                     result->addMessage(e.what());
-                    result->set(getName(), 0, 1);
+                    result->set(_className, 0, 1);
                     throw e;
                 }
             }
@@ -80,7 +95,8 @@ namespace iunit {
 
         private:
             _TestMethod_base* _methodObj;
-            std::string _name;
+            std::string _className;
+            std::string _methodName;
         };
 
     };

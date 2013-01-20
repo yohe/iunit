@@ -32,20 +32,6 @@
             throw AssertException(ss.str(), file, line); \
         } \
     }
-#define IUNIT_DETAIL_WARN_CHECK_IMPL(expected, actual, file, line, OP) \
-    { \
-        if( expected OP actual ) { \
-            this->success(); \
-        } else { \
-            this->failed(); \
-            std::stringstream ss; \
-            ss << file << "(" << line << ")" << std::endl; \
-            ss << "Warning :            " << #expected << " " << #OP << " " << #actual << std::endl; \
-            ss << "          expected = " << expected << std::endl;\
-            ss << "            actual = " << actual;\
-            this->currentResult()->addMessage(ss.str()); \
-        } \
-    }
 
 // Check Equal
 #define IUNIT_DETAIL_ASSERT_EQ(expected, actual, file, line) \
@@ -146,57 +132,6 @@
             ss << "Error :         " << #actual << " != NULL" << std::endl; \
             ss << "        but was " << #actual << "  = " << actual;\
             throw ErrorException(ss.str(), file, line); \
-        } else { \
-            this->success(); \
-        } \
-    }
-
-// Check Equal
-#define IUNIT_DETAIL_WARN_EQ(expected, actual, file, line) \
-    IUNIT_DETAIL_WARN_CHECK_IMPL(expected, actual, file, line, == ) \
-
-// Check Not Equal
-#define IUNIT_DETAIL_WARN_NE(expected, actual, file, line) \
-    IUNIT_DETAIL_WARN_CHECK_IMPL(expected, actual, file, line, != ) \
-
-// Check Less Equal
-#define IUNIT_DETAIL_WARN_LE(expected, actual, file, line) \
-    IUNIT_DETAIL_WARN_CHECK_IMPL(expected, actual, file, line, >= ) \
-
-// Check Less Than
-#define IUNIT_DETAIL_WARN_LT(expected, actual, file, line) \
-    IUNIT_DETAIL_WARN_CHECK_IMPL(expected, actual, file, line, > ) \
-
-// Check Greater Equal
-#define IUNIT_DETAIL_WARN_GE(expected, actual, file, line) \
-    IUNIT_DETAIL_WARN_CHECK_IMPL(expected, actual, file, line, <= ) \
-
-// Check Greater Than 
-#define IUNIT_DETAIL_WARN_GT(expected, actual, file, line) \
-    IUNIT_DETAIL_WARN_CHECK_IMPL(expected, actual, file, line, < ) \
-
-// Check Equal NULL
-#define IUNIT_DETAIL_WARN_NULL(expected, actual, file, line) \
-    { \
-        if( iunit::detail::EqualChecker::equal((void*)expected, (void*)actual) == false ) { \
-            this->failed(); \
-            std::stringstream ss; \
-            ss << "Warning :         " << #actual << " == NULL" << std::endl; \
-            ss << "          but was " << #actual << "  = " << actual;\
-        } else { \
-            this->success(); \
-        } \
-    }
-
-// Check Not Equal NULL
-#define IUNIT_DETAIL_WARN_NOT_NULL(expected, actual, file, line) \
-    { \
-        if( iunit::detail::EqualChecker::equal((void*)expected, (void*)actual) != false ) { \
-            this->failed(); \
-            std::stringstream ss; \
-            ss << "Warning :         " << #actual << " != NULL" << std::endl; \
-            ss << "          but was " << #actual << "  = " << actual;\
-            this->currentResult()->addMessage(ss.str()); \
         } else { \
             this->success(); \
         } \

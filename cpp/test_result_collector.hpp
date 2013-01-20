@@ -41,13 +41,7 @@ namespace iunit {
         }
 
         virtual void write(TestOutputter* outputter) {
-            outputter->start();
-            std::vector<TestResult*>::iterator ite = _rootResult.begin();
-            std::vector<TestResult*>::iterator end = _rootResult.end();
-            for(; ite != end; ite++) {
-                output(outputter, *ite);
-            }
-            outputter->end();
+            outputter->write(_rootResult);
         }
         
         virtual size_t size() const {
@@ -55,21 +49,23 @@ namespace iunit {
         }
 
     protected:
-        virtual void output(TestOutputter* outputter, TestResult* result) {
-            if(result->_results.empty()) {
-                outputter->write(result);
-                return;
-            }
+        //virtual void output(TestOutputter* outputter, TestResult* result, bool isLast) {
+        //    //if(result->_results.empty()) {
+        //    //    outputter->write(result);
+        //    //    return;
+        //    //}
 
-            outputter->start(result);
-            std::vector<TestResult*>::iterator ite = result->_results.begin();
-            std::vector<TestResult*>::iterator end = result->_results.end();
-            for(; ite != end; ite++) {
-                output(outputter, *ite);
-            }
-            outputter->end(result);
+        //    //outputter->start(result, isLast);
+        //    //std::vector<TestResult*>::iterator ite = result->_results.begin();
+        //    //std::vector<TestResult*>::iterator end = result->_results.end();
+        //    //std::vector<TestResult*>::iterator last = result->_results.end();
+        //    //last--;
+        //    //for(; ite != end; ite++) {
+        //    //    output(outputter, *ite, ite == last);
+        //    //}
+        //    //outputter->end(result);
 
-        }
+        //}
     };
 
 };

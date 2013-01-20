@@ -41,7 +41,7 @@ namespace iunit {
             
             std::string what() {
                 std::stringstream ss;
-                ss << _testName << " Error! " << _file << "(" << _line << ")" << std::endl;
+                ss << _file << "(" << _line << ")" << std::endl;
                 ss << _message;
                 return ss.str();
             }
