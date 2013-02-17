@@ -35,8 +35,13 @@ namespace iunit {
         void clear();
 
         template <class T>
-        void addTest(T* instance, void (T::*method)(), std::string className, std::string methodName);
-        virtual void addTest(CppTestCase* test);
+        void addTest(T* instance, void (T::*method)(), std::string className, std::string methodName) {
+            TestMethod* testMethod = new TestMethod(instance, method, className, methodName);
+            _testMethods.push_back(testMethod);
+        }
+        virtual void addTest(CppTestCase* test) {
+            _children.push_back(test);
+        }
 
         virtual TestRunnable* getTest() { return this; }
 
@@ -44,17 +49,7 @@ namespace iunit {
         virtual void runImpl(TestResult* testCaseResult);
     };
 
-    template<class T>
-    void CppTestCase::addTest(T* instance, void (T::*method)(), std::string className, std::string methodName) {
-        TestMethod* testMethod = new TestMethod(instance, method, className, methodName);
-        _testMethods.push_back(testMethod);
-    }
-
-    void CppTestCase::addTest(CppTestCase* test) {
-        _children.push_back(test);
-    }
-
-    void CppTestCase::clear() {
+    inline void CppTestCase::clear() {
         std::vector<TestMethod*>::iterator ite = _testMethods.begin();
         std::vector<TestMethod*>::iterator end = _testMethods.end();
         for(; ite != end; ite++) {
@@ -69,7 +64,7 @@ namespace iunit {
         _children.clear();
     }
 
-    void CppTestCase::runImpl(TestResult* testCaseResult) {
+    inline void CppTestCase::runImpl(TestResult* testCaseResult) {
         clear();
         init();
         setup();
