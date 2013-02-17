@@ -20,26 +20,26 @@ namespace iunit {
 
             virtual ~TestException() {}
 
-            std::string testName() {
+            std::string testName() const {
                 return _testName;
             }
             void setTestName(std::string testName) {
                 _testName = testName;
             }
             
-            std::string message() {
+            std::string message() const {
                 return _message;
             }
 
-            std::string file() {
+            std::string file() const {
                 return _file;
             }
 
-            size_t line() {
+            size_t line() const {
                 return _line;
             }
             
-            std::string what() {
+            std::string what() const {
                 std::stringstream ss;
                 ss << _file << "(" << _line << ")" << std::endl;
                 ss << _message;
@@ -64,7 +64,7 @@ namespace iunit {
 
             virtual ~AssertException() {}
             
-            std::string what() {
+            std::string what() const {
                 std::stringstream ss;
                 ss << "!!! Assertion !!!" << std::endl;
                 ss << TestException::what();

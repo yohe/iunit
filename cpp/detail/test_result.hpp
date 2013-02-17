@@ -48,10 +48,10 @@ namespace iunit {
                 _results.push_back(child);
             }
             
-            std::string testName() {
+            std::string testName() const {
                 return _testName;
             }
-            std::string testMethodName() {
+            std::string testMethodName() const {
                 return _testMethod;
             }
 

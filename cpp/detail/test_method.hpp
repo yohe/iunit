@@ -10,6 +10,7 @@
 #include "test_result_collector.hpp"
 #include "detail/test_result.hpp"
 #include "detail/test_runnable.hpp"
+#include "detail/test_util.hpp"
 
 namespace iunit {
     namespace detail {
@@ -69,24 +70,24 @@ namespace iunit {
             virtual void runImpl(TestResult* result) {
                 std::string test = testName();
                 try {
-                    std::cout << "[ RUN      ] " << test << std::endl;
+                    Util::printStartTest(test);
                     _methodObj->call(result);
-                    std::cout << "[       OK ] " << test << std::endl;
+                    Util::printEndTest(test, true);
                     result->set(_className, 1, 0);
                 } catch (ErrorException& e) {
-                    std::cout << "[  FAILED  ] ## Error  --> " << test << std::endl;
+                    Util::printEndTest(test, false);
                     e.setTestName(test);
-                    std::cout << e.what() << std::endl;
+                    Util::printException(e);
                     result->addMessage(e.what());
                     result->set(_className, 0, 1);
-                    throw e;
+                    throw;
                 } catch (AssertException& e) {
-                    std::cout << "[  FAILED  ] ## Assert --> " << test << std::endl;
+                    Util::printEndTest(test, false);
                     e.setTestName(test);
-                    std::cout << e.what() << std::endl;
+                    Util::printException(e);
                     result->addMessage(e.what());
                     result->set(_className, 0, 1);
-                    throw e;
+                    throw;
                 }
             }
 

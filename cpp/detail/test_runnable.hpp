@@ -15,18 +15,20 @@ namespace iunit {
     namespace detail {
         class TestRunnable {
         public:
-            TestRunnable(const std::string name) :
+            TestRunnable(const std::string& name) :
                 _success(0),
                 _failed(0),
-                _name(name)
+                _name(name),
+                _result(NULL)
             {
                 _fixture = new TestFixture();
             }
 
-            TestRunnable(const std::string name, TestFixture* fixture) :
+            TestRunnable(const std::string& name, TestFixture* fixture) :
                 _success(0),
                 _failed(0),
-                _name(name)
+                _name(name),
+                _result(NULL)
             {
                 _fixture = fixture;
             }

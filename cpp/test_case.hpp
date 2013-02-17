@@ -89,7 +89,7 @@ namespace iunit {
                 testCaseResult->add(methodResult);
             } catch (AssertException& e) {
                 testCaseResult->add(methodResult);
-                throw e;
+                throw;
             }
         }
 
