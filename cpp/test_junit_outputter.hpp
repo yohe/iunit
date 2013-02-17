@@ -51,10 +51,13 @@ namespace iunit {
                 indent += "  ";
             }
 
+            size_t p = result->testName().find(":");
+            std::string className = result->testName().substr(0, p);
+            std::string methodName = result->testName().substr(p+2);
             _os << indent
                 << "<testcase "
-                << "classname=\"" << result->testName()
-                << "\" name=\"" << result->testMethodName()
+                << "classname=\"" << className
+                << "\" name=\"" << methodName
                 << "\">" << std::endl;
 
             if(!result->isSuccess()) {

@@ -73,20 +73,20 @@ namespace iunit {
                     Util::printStartTest(test);
                     _methodObj->call(result);
                     Util::printEndTest(test, true);
-                    result->set(_className, 1, 0);
+                    result->set(test, 1, 0);
                 } catch (ErrorException& e) {
                     Util::printEndTest(test, false);
                     e.setTestName(test);
                     Util::printException(e);
                     result->addMessage(e.what());
-                    result->set(_className, 0, 1);
+                    result->set(test, 0, 1);
                     throw;
                 } catch (AssertException& e) {
                     Util::printEndTest(test, false);
                     e.setTestName(test);
                     Util::printException(e);
                     result->addMessage(e.what());
-                    result->set(_className, 0, 1);
+                    result->set(test, 0, 1);
                     throw;
                 }
             }

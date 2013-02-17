@@ -76,7 +76,7 @@ namespace iunit {
         std::vector<TestMethod*>::iterator ite = _testMethods.begin();
         std::vector<TestMethod*>::iterator end = _testMethods.end();
         for(; ite != end; ite++) {
-            TestResult* methodResult = new TestResult((*ite)->className(), (*ite)->methodName());
+            TestResult* methodResult = new TestResult((*ite)->testName());
             try {
                 (*ite)->run(methodResult);
                 testCaseResult->add(methodResult);

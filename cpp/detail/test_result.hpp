@@ -12,9 +12,8 @@ namespace iunit {
     namespace detail {
         class TestResult {
         public:
-            TestResult(const std::string& testName, const std::string testMethod = "") :
+            TestResult(const std::string& testName) :
                 _testName(testName),
-                _testMethod(testMethod),
                 _success(0),
                 _failed(0)
             {
@@ -31,10 +30,6 @@ namespace iunit {
                 _results.clear();
             }
             
-            //virtual void output(TestOutputter* outputter, bool last = false) {
-            //    
-            //}
-            
             bool isSuccess() const {
                 if(_failed == 0) {
                     return true;
@@ -50,9 +45,6 @@ namespace iunit {
             
             std::string testName() const {
                 return _testName;
-            }
-            std::string testMethodName() const {
-                return _testMethod;
             }
 
             void set(const std::string& name, size_t success, size_t failed) {
@@ -77,7 +69,6 @@ namespace iunit {
             }
 
             std::string _testName;
-            std::string _testMethod;
             size_t _success;
             size_t _failed;
             std::vector<TestResult*> _results;
