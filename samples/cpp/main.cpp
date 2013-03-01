@@ -5,6 +5,7 @@
 #include <test_text_outputter.hpp>
 #include <test_junit_outputter.hpp>
 #include <test_macros.hpp>
+#include <test_config.hpp>
 
 #include <fstream>
 
@@ -113,10 +114,13 @@ public:
 
 int main(int argc, char const* argv[])
 {
+    TestConfig config;
+    config.init(argc, argv);
     CppTestResultCollector collector;
     CppTestSuite suite("TestSuite", &collector);
     suite.addTest(new SampleTest());
     suite.addTest(new SampleTest2());
+    suite.config(config);
     suite.start();
 
     //original test suite
