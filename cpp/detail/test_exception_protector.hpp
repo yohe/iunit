@@ -37,7 +37,6 @@ namespace iunit {
                     test->run(testResult);
                     parent->add(testResult);
                 } catch (...) {
-                    //testResult->set(test->getName(), 0, 1);
                     parent->add(testResult);
                     throw;
                 }
@@ -58,7 +57,6 @@ namespace iunit {
                 } catch (ErrorException& e) {
                     parent->add(testResult);
                 } catch (...) {
-                    //testResult->set(test->getName(), 0, 1);
                     parent->add(testResult);
                     throw;
                 }
@@ -79,7 +77,6 @@ namespace iunit {
                 } catch (AssertException& e) {
                     parent->add(testResult);
                 } catch (...) {
-                    //testResult->set(test->getName(), 0, 1);
                     parent->add(testResult);
                     throw;
                 }

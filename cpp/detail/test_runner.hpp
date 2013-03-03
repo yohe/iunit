@@ -26,7 +26,7 @@ namespace iunit {
                 runImpl(owner, result, tests, protector);
             }
 
-        private:
+        protected:
             virtual void runImpl(TestRunnable* owner,
                                  TestResult* result,
                                  std::vector<TestRunnable*> tests,
@@ -45,7 +45,7 @@ namespace iunit {
             virtual ~RepeatableRunner() {
             }
 
-        private:
+        protected:
             virtual void runImpl(TestRunnable* owner,
                                  TestResult* result,
                                  std::vector<TestRunnable*> tests,
@@ -71,7 +71,7 @@ namespace iunit {
             virtual ~ShuffleRunner() {
             }
 
-        private:
+        protected:
             virtual void runImpl(TestRunnable* owner,
                                  TestResult* result,
                                  std::vector<TestRunnable*> tests,
@@ -97,13 +97,13 @@ namespace iunit {
             virtual ~RepeatableShuffleRunner() {
             }
 
-        private:
+        protected:
             virtual void runImpl(TestRunnable* owner,
                                  TestResult* result,
                                  std::vector<TestRunnable*> tests,
                                  ExceptionProtector* protector) {
                 for(int i=0; i < _repeatCount; ++i) {
-                    ShuffleRunner::run(owner, result, tests, protector);
+                    ShuffleRunner::runImpl(owner, result, tests, protector);
                 }
             }
         };

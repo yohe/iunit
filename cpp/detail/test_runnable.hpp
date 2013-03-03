@@ -91,11 +91,9 @@ namespace iunit {
             TestConfig _config;
 
             virtual void setup() {
-                //std::cout << _name << "-Setup" << std::endl;
                 _fixture->setup();
             }
             virtual void teardown() {
-                //std::cout << _name << "-Teardown" << std::endl;
                 _fixture->teardown();
             }
             virtual void init() = 0;

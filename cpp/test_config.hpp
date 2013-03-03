@@ -27,11 +27,11 @@ namespace iunit {
             }
             for(int i=1; i < argc; ++i) {
                 std::string str(argv[i]);
-                if( str.find("-shuffle") != std::string::npos ) {
+                if( str == "--shuffle" ) {
                     _shuffling = true;
                     continue;
                 }
-                if( str.find("-repeat") != std::string::npos ) {
+                if( str.find("--repeat", 0, 8) != std::string::npos ) {
                     size_t pos = str.find("=");
                     std::string count = str.substr(pos+1);
                     char* endptr = 0;
@@ -43,9 +43,14 @@ namespace iunit {
                     _repeateCount = value;
                     continue;
                 }
-                if( str.find("-filter") != std::string::npos ) {
+                if( str.find("--filter", 0, 8) != std::string::npos ) {
                     _useFilter = true;
                     continue;
+                }
+                if(str == "--help" || str == "-h" ) {
+                    printUsage(argv[0]);
+                    std::cout << "---------" << std::endl;
+                    exit(0);
                 }
                 printUsage(argv[0]);
                 exit(1);
@@ -58,7 +63,10 @@ namespace iunit {
             std::cout << exe << " [option]" << std::endl;
             std::cout << std::endl;
             std::cout << "Option:" << std::endl;
-            std::cout << "   -shuffle"<< std::endl;
+            std::cout << "   --help -h"<< std::endl;
+            std::cout << "        Display Usage. " << std::endl;
+            std::cout << std::endl;
+            std::cout << "   --shuffle"<< std::endl;
             std::cout << "        Shuffle is performed as follows:\n"
                       << "          1. Execute any one test case "
                                        "that is included a test suite.\n"
@@ -67,11 +75,11 @@ namespace iunit {
                       << "             is included in oneself in the random order."
                       << std::endl;
             std::cout << std::endl;
-            std::cout << "   -repeat=count"<< std::endl;
+            std::cout << "   --repeat=count"<< std::endl;
             std::cout << "        Repeat a specified number of times.\n";
             std::cout << std::endl;
-            std::cout << "   -filter=testPath"<< std::endl;
-            std::cout << "       not support" << std::endl;
+            std::cout << "   --filter=testPath"<< std::endl;
+            std::cout << "        not support" << std::endl;
             std::cout << std::endl;
         }
 
