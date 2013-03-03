@@ -84,17 +84,6 @@ namespace iunit {
             virtual ~ErrorException() {}
         };
 
-        //class WarnException : public TestException{
-        //public:
-        //    WarnException (const std::string& message,
-        //                   const std::string& file,
-        //                   size_t line) : 
-        //        TestException(message, file, line)
-        //    {
-        //    }
-
-        //    virtual ~WarnException() {}
-        //};
     };
 };
 

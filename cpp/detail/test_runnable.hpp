@@ -5,8 +5,9 @@
 #include <string>
 #include <vector>
 
-#include "test_result_collector.hpp"
 #include "test_fixture.hpp"
+#include "test_result_collector.hpp"
+#include "test_config.hpp"
 
 #include "detail/test_exception.hpp"
 #include "detail/test_result.hpp"
@@ -14,6 +15,7 @@
 namespace iunit {
     namespace detail {
         class TestRunnable {
+            friend class FixtureConstructor;
         public:
             TestRunnable(const std::string& name) :
                 _success(0),
@@ -36,12 +38,17 @@ namespace iunit {
                 delete _fixture;
             }
 
+            void config(TestConfig& config){
+                _config = config;
+            }
+
             void ready(TestResult* current) {
                 _result = current;
             } 
-            TestResult* currentResult() {
-                return _result;
-            }
+
+            //TestResult* currentResult() {
+            //    return _result;
+            //}
 
             virtual bool isSuccessful() const {
                 return _failed == 0;
@@ -56,7 +63,14 @@ namespace iunit {
                 return _name;
             }
             virtual void run(TestResult* result) {
-                runImpl(result);
+                //setup();
+                try {
+                    runImpl(result);
+                } catch(...) {
+                    //teardown();
+                    throw;
+                }
+                //teardown();
             }
         protected:
 
@@ -74,11 +88,14 @@ namespace iunit {
             std::string _name;
             TestFixture* _fixture;
             TestResult* _result;
+            TestConfig _config;
 
             virtual void setup() {
+                //std::cout << _name << "-Setup" << std::endl;
                 _fixture->setup();
             }
             virtual void teardown() {
+                //std::cout << _name << "-Teardown" << std::endl;
                 _fixture->teardown();
             }
             virtual void init() = 0;

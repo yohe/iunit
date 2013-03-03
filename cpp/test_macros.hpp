@@ -13,8 +13,8 @@ using namespace iunit::detail;
     addTest(this, &className::methodName, #className, #methodName)
 
 #define IUNIT_MESSAGE( message )   \
+    std::cout << message << std::endl;
     //this->getResult().getOstream() << message << std::endl;
-    //std::cout << method << "[" << __FILE__ << "(" << __LINE__ << ")]" << std::endl;
     
 //------------------------------------------------------------------------
 // Normal Check

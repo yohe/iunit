@@ -9,15 +9,6 @@ namespace iunit {
         virtual void setup() {};
         virtual void teardown() {};
     };
-    
-    //class NullFixture : public TestFixture {
-    //public:
-    //    NullFixture() {}
-    //    virtual void setup() {}
-    //    virtual void teardown() {}
-    //};
-
 };
-
 
 #endif /* end of include guard */

@@ -19,18 +19,37 @@ namespace iunit {
         class Util {
         public:
             static void printStartTest(const std::string& name) {
-                std::cout << RUN_TEST_COLOR << "[ RUN      ] " << DEFAULT_COLOR << name << std::endl;
+                std::cout << RUN_TEST_COLOR << "[ RUN      ] "
+                          << DEFAULT_COLOR << name << std::endl;
             }
             static void printEndTest(const std::string& name, bool success) {
                 if( success ) {
-                    std::cout << SUCCESS_TEST_COLOR << "[       OK ] " << DEFAULT_COLOR << name << std::endl;
+                    std::cout << SUCCESS_TEST_COLOR << "[       OK ] "
+                              << DEFAULT_COLOR << name << std::endl;
                 } else {
-                    std::cout << FAILED_TEST_COLOR << "[  FAILED  ] " << name << DEFAULT_COLOR << std::endl;
+                    std::cout << FAILED_TEST_COLOR << "[  FAILED  ] "
+                              << name << DEFAULT_COLOR << std::endl;
                 }
             }
             static void printException(TestException& e) {
-                std::cout << EXCEPTION_MESSAGE_COLOR << e.what() << DEFAULT_COLOR << std::endl;
+                std::cout << EXCEPTION_MESSAGE_COLOR << e.what()
+                          << DEFAULT_COLOR << std::endl;
             }
+            static void printException(std::exception& e) {
+                std::cout << EXCEPTION_MESSAGE_COLOR << e.what()
+                          << DEFAULT_COLOR << std::endl;
+            }
+
+            class PrintTestState {
+                TestResult* _result;
+            public:
+                PrintTestState(TestResult* result) : _result(result) {
+                    printStartTest(_result->testName());
+                }
+                ~PrintTestState() {
+                    printEndTest(_result->testName(), _result->isSuccess());
+                }
+            };
         };
 
     };

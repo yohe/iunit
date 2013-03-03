@@ -5,7 +5,6 @@
 #include <string>
 #include <cstdlib>
 #include <ctime>
-#include "detail/test_runner.hpp"
 
 
 namespace iunit {
@@ -20,14 +19,6 @@ namespace iunit {
             _useFilter(false)
         {
         }
-        
-        //TestConfig& operator =(TestConfig& config) {
-        //    std::cout << _repeateCount << " " << config._repeateCount << std::endl;
-        //    this->_shuffling = config._shuffling;
-        //    this->_repeateCount = config._repeateCount;
-        //    this->_useFilter = config._useFilter;
-        //    return *this;
-        //}
 
         bool init(int argc, char const* argv[]) {
             srand((unsigned int)time(NULL));

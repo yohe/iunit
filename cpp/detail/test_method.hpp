@@ -35,7 +35,7 @@ namespace iunit {
                 {
                 }
                 virtual void call(TestResult* result) const {
-                    _instance->ready(result);
+                    //_instance->ready(result);
                     (_instance->*_method)();
                 }
             };
@@ -60,9 +60,13 @@ namespace iunit {
                 return _methodName;
             }
             
-            virtual std::string testName() {
+            virtual std::string testName() const {
                 std::string test = _className + "::" + _methodName;
                 return test;
+            }
+            
+            virtual std::string getName() const {
+                return testName();
             }
             
         protected:
@@ -70,19 +74,15 @@ namespace iunit {
             virtual void runImpl(TestResult* result) {
                 std::string test = testName();
                 try {
-                    Util::printStartTest(test);
                     _methodObj->call(result);
-                    Util::printEndTest(test, true);
                     result->set(test, 1, 0);
                 } catch (ErrorException& e) {
-                    Util::printEndTest(test, false);
                     e.setTestName(test);
                     Util::printException(e);
                     result->addMessage(e.what());
                     result->set(test, 0, 1);
                     throw;
                 } catch (AssertException& e) {
-                    Util::printEndTest(test, false);
                     e.setTestName(test);
                     Util::printException(e);
                     result->addMessage(e.what());
