@@ -39,6 +39,7 @@ public:
         IUNIT_ASSERT_NULL(NULL);
         IUNIT_NOT_NULL(a);
         IUNIT_ASSERT_NOT_NULL(a);
+        sleep(2);
         delete a;
     }
     void test_2() {
@@ -51,6 +52,7 @@ public:
         IUNIT_ASSERT_LT(2, 1)
         IUNIT_ASSERT_GE(2, 3)
         IUNIT_ASSERT_GT(2, 3)
+        sleep(1);
     }
     
     virtual void init() {

@@ -12,7 +12,10 @@ namespace iunit {
 
     class JUnitOutputter : public TextOutputter {
     public:
-        JUnitOutputter(std::ostream& os) : TextOutputter(os), _index(0) {}
+        JUnitOutputter(std::ostream& os) : TextOutputter(os), _index(0) {
+            _os.precision(3);
+            _os << std::fixed;
+        }
 
         virtual void start(TestResult* result = NULL, bool last = false) {
             assert(_indentCount < 2);
@@ -34,6 +37,7 @@ namespace iunit {
                     << "<testsuite tests=\"" << tests
                     << "\" errors=\"" << result->_failed
                     << "\" name=\"" << result->testName()
+                    << "\" time=\"" << result->getRunTime()
                     << "\" id=\"" << _index << "\" >" << std::endl;
 
                 _os << indent << indent << "<properties />" << std::endl;
@@ -58,6 +62,7 @@ namespace iunit {
                 << "<testcase "
                 << "classname=\"" << className
                 << "\" name=\"" << methodName
+                << "\" time=\"" << result->getRunTime()
                 << "\">" << std::endl;
 
             if(!result->isSuccess()) {

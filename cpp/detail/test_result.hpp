@@ -46,11 +46,19 @@ namespace iunit {
             std::string testName() const {
                 return _testName;
             }
+            
+            double getRunTime() const {
+                return _runTime;
+            }
 
             void set(const std::string& name, size_t success, size_t failed) {
                 _testName = name;
                 _success += success;
                 _failed += failed;
+            }
+
+            void setRunTime(double time) {
+                _runTime = time;
             }
 
             std::ostream& getOstream() {
@@ -73,6 +81,7 @@ namespace iunit {
             size_t _failed;
             std::vector<TestResult*> _results;
             std::ostringstream _oss;
+            double _runTime;
             
             void printOn( std::ostream& os ) {
                 os << "Name = " << _testName << " success = " << _success

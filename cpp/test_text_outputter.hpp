@@ -11,7 +11,10 @@ namespace iunit {
 
     class TextOutputter : public TestOutputter {
     public:
-        TextOutputter(std::ostream& os) : _os(os), _indentCount(0) {}
+        TextOutputter(std::ostream& os) : _os(os), _indentCount(0) {
+            _os.precision(3);
+            _os << std::fixed;
+        }
 
         virtual void start(TestResult* result = NULL, bool last = false) {
             if(result == NULL) {
@@ -33,7 +36,9 @@ namespace iunit {
             } else {
                 _os << "[X]";
             }
-            _os << " " << indent << result->testName() << std::endl;
+            
+            _os << " " << indent << result->testName() << " : " 
+                << result->getRunTime() << "[ms]"<< std::endl;
 
             _indentCount++;
         }
@@ -54,7 +59,9 @@ namespace iunit {
             } else {
                 _os << "[X]";
             }
-            _os << " " << indent << result->testName() << std::endl;
+
+            _os << " " << indent << result->testName() << " : "
+                << result->getRunTime() << "[ms]"<< std::endl;
 
             if(result->isSuccess()) {
                 // nop

@@ -82,6 +82,8 @@ namespace iunit {
             }
 
             ErrorProtector protector;
+            CountUpTimer watch;
+            watch.set();
             try {
                 runner->run(this, suiteResult, _testCases, &protector);
             } catch (AssertException& e){
@@ -93,6 +95,7 @@ namespace iunit {
             } catch (...) {
                 std::cout << "!!! Catch POD Exception !!!" << std::endl;
             }
+            suiteResult->setRunTime(watch.elapsed());
 
             delete runner;
         }
