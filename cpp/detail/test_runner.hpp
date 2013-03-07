@@ -14,6 +14,7 @@ namespace iunit {
 
     namespace detail {
         class TestRunner {
+        protected:
             TestConfig* _config;
         public:
             TestRunner(TestConfig* config) : _config(config) {}
@@ -57,6 +58,7 @@ namespace iunit {
                     // 登録されている全てのテストを実行
                     // テストケース毎にテスト結果を登録
                     for(; test != tmp.end(); test++) {
+                        (*test)->config(*_config);
                         protector->protectedRun(owner, result, *test);
                     }
                 }
@@ -81,6 +83,7 @@ namespace iunit {
                 for(std::vector<TestRunnable*>::iterator test = tmp.begin();
                     test != tmp.end();
                     ++test) {
+                    (*test)->config(*_config);
                     protector->protectedRun(owner, result, *test);
                 }
             }

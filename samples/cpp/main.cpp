@@ -54,10 +54,14 @@ public:
         IUNIT_ASSERT_GT(2, 3)
         sleep(1);
     }
+    void test_3() {
+        IUNIT_MESSAGE( "Test 3 Start" );
+    }
     
     virtual void init() {
         IUNIT_ADD_TEST( SampleTest2, test_1 );
         IUNIT_ADD_TEST( SampleTest2, test_2 );
+        IUNIT_ADD_TEST( SampleTest2, test_3 );
         //addTest(this, &SampleTest::test_plus , "SampleTest::test_plus" );
     }
 };
