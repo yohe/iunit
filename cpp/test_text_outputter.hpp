@@ -23,11 +23,7 @@ namespace iunit {
 
             std::string indent = "";
             for(int i = 0; i < _indentCount; ++i) {
-                if(i==0) {
-                    indent += "    ";
-                } else {
-                    indent += "  ";
-                }
+                indent += "    ";
             }
             indent += " ";
             
@@ -77,11 +73,6 @@ namespace iunit {
             _indentCount--;
             if(result == NULL) {
                 return;
-            }
-
-            std::string indent;
-            for(int i = 0; i < _indentCount; ++i) {
-                indent += "  ";
             }
         }
     protected:

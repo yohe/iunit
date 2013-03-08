@@ -70,6 +70,7 @@ class SampleTest : public CppTestCase {
     int value;
 public:
     SampleTest() : CppTestCase("SampleTest") {
+        value = 0;
     }
 
     virtual void setup() {

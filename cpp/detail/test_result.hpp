@@ -15,7 +15,8 @@ namespace iunit {
             TestResult(const std::string& testName) :
                 _testName(testName),
                 _success(0),
-                _failed(0)
+                _failed(0),
+                _runTime(0)
             {
             }
             
