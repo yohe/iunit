@@ -15,18 +15,12 @@ namespace iunit {
                                       TestRunnable* test) {
                 FixtureConstructor env(owner);
                 TestResult* testResult = new TestResult(test->getName());
-                Util::PrintTestState printer(testResult);
-                CountUpTimer watch;
-                watch.set();
                 try {
                     test->run(testResult);
-                    testResult->setRunTime(watch.elapsed());
                     parent->add(testResult);
                 } catch (...) {
-                    testResult->setRunTime(watch.elapsed());
                     parent->add(testResult);
                 }
-                Util::printEndTest(test->getName(), testResult->isSuccess());
             }
         };
         
@@ -37,15 +31,10 @@ namespace iunit {
                                       TestRunnable* test) {
                 FixtureConstructor env(owner);
                 TestResult* testResult = new TestResult(test->getName());
-                Util::PrintTestState printer(testResult);
-                CountUpTimer watch;
-                watch.set();
                 try {
                     test->run(testResult);
-                    testResult->setRunTime(watch.elapsed());
                     parent->add(testResult);
                 } catch (...) {
-                    testResult->setRunTime(watch.elapsed());
                     parent->add(testResult);
                     throw;
                 }
@@ -59,18 +48,12 @@ namespace iunit {
                                       TestRunnable* test) {
                 FixtureConstructor env(owner);
                 TestResult* testResult = new TestResult(test->getName());
-                Util::PrintTestState printer(testResult);
-                CountUpTimer watch;
-                watch.set();
                 try {
                     test->run(testResult);
-                    testResult->setRunTime(watch.elapsed());
                     parent->add(testResult);
                 } catch (ErrorException& e) {
-                    testResult->setRunTime(watch.elapsed());
                     parent->add(testResult);
                 } catch (...) {
-                    testResult->setRunTime(watch.elapsed());
                     parent->add(testResult);
                     throw;
                 }
@@ -84,18 +67,12 @@ namespace iunit {
                                       TestRunnable* test) {
                 FixtureConstructor env(owner);
                 TestResult* testResult = new TestResult(test->getName());
-                Util::PrintTestState printer(testResult);
-                CountUpTimer watch;
-                watch.set();
                 try {
                     test->run(testResult);
-                    testResult->setRunTime(watch.elapsed());
                     parent->add(testResult);
                 } catch (AssertException& e) {
-                    testResult->setRunTime(watch.elapsed());
                     parent->add(testResult);
                 } catch (...) {
-                    testResult->setRunTime(watch.elapsed());
                     parent->add(testResult);
                     throw;
                 }

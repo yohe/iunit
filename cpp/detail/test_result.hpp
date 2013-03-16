@@ -6,7 +6,7 @@
 #include <sstream>
 #include <ostream>
 
-//#include "detail/test_outputter.hpp"
+#include "detail/test_exception.hpp"
 
 namespace iunit {
     namespace detail {
@@ -72,22 +72,27 @@ namespace iunit {
                 }
                 _oss << str;
             }
+            void setException(TestException& e) {
+                _exceptionMessage = e.what();
+            }
             
             const std::string message() {
                 return _oss.str();
             }
 
+            void printOn( std::ostream& os ) {
+                os << "Name = " << _testName << " success = " << _success
+                   << " failed = " << _failed << std::endl;
+            }
+            
             std::string _testName;
             size_t _success;
             size_t _failed;
             std::vector<TestResult*> _results;
             std::ostringstream _oss;
+            std::string _exceptionMessage;
             double _runTime;
             
-            void printOn( std::ostream& os ) {
-                os << "Name = " << _testName << " success = " << _success
-                   << " failed = " << _failed << std::endl;
-            }
         };
     };
 };

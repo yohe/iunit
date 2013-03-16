@@ -6,27 +6,16 @@
 #include <vector>
 
 #include "test_fixture.hpp"
-#include "test_result_collector.hpp"
 #include "test_config.hpp"
 
-#include "detail/test_exception.hpp"
-#include "detail/test_result.hpp"
+#include "detail/test_util.hpp"
 
 namespace iunit {
     namespace detail {
         class TestRunnable {
             friend class FixtureConstructor;
         public:
-            TestRunnable(const std::string& name) :
-                _success(0),
-                _failed(0),
-                _name(name),
-                _result(NULL)
-            {
-                _fixture = new TestFixture();
-            }
-
-            TestRunnable(const std::string& name, TestFixture* fixture) :
+            TestRunnable(const std::string& name, TestFixture* fixture = NULL) :
                 _success(0),
                 _failed(0),
                 _name(name),
@@ -35,7 +24,6 @@ namespace iunit {
                 _fixture = fixture;
             }
             virtual ~TestRunnable() {
-                delete _fixture;
             }
 
             void config(TestConfig& config){
@@ -46,9 +34,9 @@ namespace iunit {
                 _result = current;
             } 
 
-            //TestResult* currentResult() {
-            //    return _result;
-            //}
+            TestResult* currentResult() {
+                return _result;
+            }
 
             virtual bool isSuccessful() const {
                 return _failed == 0;
@@ -63,15 +51,24 @@ namespace iunit {
                 return _name;
             }
             virtual void run(TestResult* result) {
-                //setup();
-                try {
-                    runImpl(result);
-                } catch(...) {
-                    //teardown();
-                    throw;
-                }
-                //teardown();
+                util::TestReporter reporter(result);
+                runImpl(result);
             }
+            
+            void setParentPath(const std::string& path) {
+                _parentPath = path;
+            }
+            const std::string getFullPath() const {
+                return _parentPath + "/" + _name;
+            }
+            class PrintTestPathFunctor {
+                TestRunnable* _parent;
+            public:
+                PrintTestPathFunctor(TestRunnable* parent) : _parent(parent) {}
+                void operator()(TestRunnable* test) {
+                    test->printTestPath(_parent);
+                }
+            };
         protected:
 
             virtual void runImpl(TestResult* result) = 0;
@@ -83,22 +80,29 @@ namespace iunit {
                 ++_failed;
             }
 
+            virtual void printTestPath(TestRunnable* parent) {
+            }
+
             size_t _success;
             size_t _failed;
             std::string _name;
             TestFixture* _fixture;
             TestResult* _result;
             TestConfig _config;
+            std::string _parentPath;
 
             virtual void setup() {
-                _fixture->setup();
+                if(_fixture)
+                    _fixture->setup();
             }
             virtual void teardown() {
-                _fixture->teardown();
+                if(_fixture)
+                    _fixture->teardown();
             }
             virtual void init() = 0;
         };
-    };
-};
+        
+    }
+}
 
 #endif /* end of include guard */

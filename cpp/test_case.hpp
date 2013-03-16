@@ -6,14 +6,10 @@
 #include <vector>
 #include <iomanip>
 
-#include "test_fixture.hpp"
-
 #include "detail/test_runnable.hpp"
 #include "detail/test_runner.hpp"
 #include "detail/test_method.hpp"
-#include "detail/test_exception.hpp"
 #include "detail/test_result.hpp"
-#include "detail/test_util.hpp"
 #include "detail/test_exception_protector.hpp"
 
 
@@ -25,13 +21,11 @@ namespace iunit {
     private:
         std::vector<TestRunnable*> _testMethods;
         std::vector<TestRunnable*> _children;
-        TestResult* _currentResult;
 
     protected:
     public:
-        CppTestCase(const std::string& name) 
-            : TestRunnable(name),
-              _currentResult(NULL)
+        CppTestCase(const std::string& name, TestFixture* fixture = NULL) 
+            : TestRunnable(name, fixture)
         {
         }
         virtual ~CppTestCase() { clear(); }
@@ -53,6 +47,16 @@ namespace iunit {
 
     protected:
         virtual void runImpl(TestResult* testCaseResult);
+
+        virtual void printTestPath(TestRunnable* parent) {
+            init();
+            setParentPath(parent->getFullPath());
+            std::cout << getFullPath() << std::endl;
+            TestRunnable::PrintTestPathFunctor functor(this);
+            std::for_each(_testMethods.begin(), _testMethods.end(), functor);
+            std::for_each(_children.begin(), _children.end(), functor);
+        }
+
     };
 
     inline void CppTestCase::clear() {
@@ -73,6 +77,11 @@ namespace iunit {
     inline void CppTestCase::runImpl(TestResult* testCaseResult) {
         clear();
         init();
+        
+        //if(_config.isPrintPath()) {
+        //    printTestPath(testCaseResult);
+        //    return;
+        //}
 
         bool shuffle = _config.isShuffling();
         TestRunner* runner = 0;
@@ -89,6 +98,7 @@ namespace iunit {
         ErrorProtector errorProtector;
         runner->run(this, testCaseResult, _children, &errorProtector);
     }
+    
 };
 
 #endif /* end of include guard */

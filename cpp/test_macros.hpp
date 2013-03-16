@@ -4,7 +4,6 @@
 #include <iostream>
 #include <sstream>
 #include <detail/test_macros.hpp>
-#include "detail/test_exception.hpp"
 
 using namespace iunit::detail;
 

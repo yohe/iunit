@@ -6,10 +6,7 @@
 #include <string>
 #include <vector>
 
-#include "test_case.hpp"
-#include "test_config.hpp"
 #include "test_result_collector.hpp"
-#include "test_fixture.hpp"
 
 #include "detail/test_runnable.hpp"
 #include "detail/test_method.hpp"
@@ -17,26 +14,26 @@
 #include "detail/test_util.hpp"
 #include "detail/test_runner.hpp"
 #include "detail/test_exception_protector.hpp"
+#include "detail/test_fixture_env.hpp"
 
 
 namespace iunit {
+    class TestFixture;
 
     using namespace detail;
-
     class CppTestSuite : public TestRunnable {
     protected:
         std::string _name;                          // Suite Name
-        CppTestResultCollector* _collector;         
+        CppTestResultCollector& _collector;         
         std::vector<TestRunnable*> _testCases;       // TestCase in Suite
 
     public:
-        CppTestSuite(const std::string& name, CppTestResultCollector* collector = NULL) 
-            : TestRunnable(name),
-              _collector(collector)
+        CppTestSuite(const std::string& name, CppTestResultCollector& collector, TestFixture* fixture = NULL) 
+            : TestRunnable(name, fixture),
+            _collector(collector)
         { }
-        
-        virtual ~CppTestSuite() {
 
+        virtual ~CppTestSuite() {
             std::vector<TestRunnable*>::iterator ite = _testCases.begin();
             std::vector<TestRunnable*>::iterator end = _testCases.end();
 
@@ -45,22 +42,27 @@ namespace iunit {
             }
             _testCases.clear();
         }
-        void start(TestFixture* fixture = NULL) {
+        void start() {
             // 全体のテスト結果を登録用変数を用意して
             // テストの実行
             // コレクタにテスト結果を渡して終了
+
             init();
             TestResult* suiteResult = new TestResult(getName());
             ready(suiteResult);
+            if(_config.isPrintPath()) {
+                printTestPath(NULL);
+                return;
+            }
 
-            Util::printStartTest(getName());
-            run(suiteResult);
-            Util::printEndTest(getName(), suiteResult->isSuccess());
+            if(!_config.isSkipTest(getFullPath())) {
+                run(suiteResult);
+            }
 
-            _collector->addResult(suiteResult);
+            _collector.addResult(suiteResult);
         }
 
-        virtual void addTest(CppTestCase* test) {
+        virtual void addTest(TestRunnable* test) {
             _testCases.push_back(test);
         }
 
@@ -69,7 +71,6 @@ namespace iunit {
         }
 
         virtual void runImpl(TestResult* suiteResult) {
-            
             int repeat = 1;
             bool shuffle = _config.isShuffling();
             repeat = _config.repeateCount();
@@ -82,22 +83,27 @@ namespace iunit {
             }
 
             ErrorProtector protector;
-            CountUpTimer watch;
-            watch.set();
             try {
+                setParentPath("");
                 runner->run(this, suiteResult, _testCases, &protector);
             } catch (AssertException& e){
-                std::cout << "!!! Catch AssertException !!!" << std::endl;
-                Util::printException(e);
+                // nop
             } catch (std::exception& e) {
                 std::cout << "!!! Catch StdException !!!" << std::endl;
-                Util::printException(e);
+                suiteResult->addMessage("!!! Catch StdException !!!" );
+                util::printException(e);
             } catch (...) {
-                std::cout << "!!! Catch POD Exception !!!" << std::endl;
+                std::cout << "!!! Catch POD or other Exception !!!" << std::endl;
+                suiteResult->addMessage("!!! Catch POD or other Exception !!!" );
             }
-            suiteResult->setRunTime(watch.elapsed());
 
             delete runner;
+        }
+
+        virtual void printTestPath(TestRunnable* parent) {
+            std::cout << getFullPath() << std::endl;
+            TestRunnable::PrintTestPathFunctor functor(this);
+            std::for_each(_testCases.begin(), _testCases.end(), functor);
         }
     };
 

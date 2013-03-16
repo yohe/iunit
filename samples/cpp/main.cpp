@@ -1,30 +1,36 @@
 
 #include <iostream>
-#include <test_case.hpp>
 #include <test_suite.hpp>
+#include <test_case.hpp>
 #include <test_text_outputter.hpp>
 #include <test_junit_outputter.hpp>
 #include <test_macros.hpp>
 #include <test_config.hpp>
 
 #include <fstream>
+#include <exception>
 
 using namespace iunit;
 
-class SampleTest2 : public CppTestCase {
+class SampleFixture : public TestFixture {
 public:
-    SampleTest2() : CppTestCase("SampleTest2") {
-    }
-
     virtual void setup() {
-        //std::cout << _name << "-Setup" << std::endl;
+        std::cout << "SampleTest2Fixture::setup()" << std::endl;
     }
     virtual void teardown() {
-        //std::cout << _name << "-Teardown" << std::endl;
+        std::cout << "SampleTest2Fixture::teardown()" << std::endl;
     }
-    
+};
+class SampleTest2 : public CppTestCase {
+public:
+    SampleTest2(SampleFixture* fixture) : CppTestCase("SampleTest2", fixture) {
+    }
+
     int value() const {
         return 2;
+    }
+    void throwException() const throw (std::exception){
+        throw std::exception();
     }
 
     void test_1() {
@@ -48,20 +54,36 @@ public:
         IUNIT_LT(2, 1)
         IUNIT_GE(2, 2)
         IUNIT_GT(2, 3)
-        IUNIT_ASSERT_LE(2, 1)
+        IUNIT_ASSERT_LE(2, 2)
         IUNIT_ASSERT_LT(2, 1)
-        IUNIT_ASSERT_GE(2, 3)
+        IUNIT_ASSERT_GE(2, 2)
         IUNIT_ASSERT_GT(2, 3)
         sleep(1);
     }
     void test_3() {
         IUNIT_MESSAGE( "Test 3 Start" );
+        IUNIT_TRUE( 1==1 );
+        IUNIT_FALSE( 1==2 );
+        IUNIT_ASSERT_TRUE( 1==1 );
+        IUNIT_ASSERT_FALSE( 1==2 );
+    }
+    void test_4() {
+        IUNIT_MESSAGE( "Test 4 Start" );
+        IUNIT_THROW(throwException(), std::exception);
+        IUNIT_NO_THROW(value());
+        IUNIT_ASSERT_THROW(throwException(), std::exception);
+        IUNIT_ASSERT_NO_THROW(value());
+        //IUNIT_NO_THROW(throwException());
+        //IUNIT_THROW(value(), std::exception);
+        //IUNIT_ASSERT_NO_THROW(throwException());
+        //IUNIT_ASSERT_THROW(value(), std::exception);
     }
     
     virtual void init() {
         IUNIT_ADD_TEST( SampleTest2, test_1 );
         IUNIT_ADD_TEST( SampleTest2, test_2 );
         IUNIT_ADD_TEST( SampleTest2, test_3 );
+        IUNIT_ADD_TEST( SampleTest2, test_4 );
         //addTest(this, &SampleTest::test_plus , "SampleTest::test_plus" );
     }
 };
@@ -109,12 +131,22 @@ public:
 };
 
 
+class SuiteFixture : public TestFixture {
+public:
+    virtual void setup() {
+        std::cout << "SuiteFixture::setup()" << std::endl;
+    }
+    virtual void teardown() {
+        std::cout << "SuiteFixture::teardown()" << std::endl;
+    }
+};
 class SampleSuite : public CppTestSuite {
 public:
-    SampleSuite(const std::string& name, CppTestResultCollector* collector = NULL) 
-        : CppTestSuite(name, collector)
+    SampleSuite(const std::string& name, CppTestResultCollector& collector) 
+        : CppTestSuite(name, collector, NULL)
     {
     }
+protected:
     virtual void init() {
         addTest(new SampleTest());
     }
@@ -123,11 +155,14 @@ public:
 int main(int argc, char const* argv[])
 {
     TestConfig config;
+    SuiteFixture fixture;
     config.init(argc, argv);
     CppTestResultCollector collector;
-    CppTestSuite suite("TestSuite", &collector);
+    CppTestSuite suite("TestSuite", collector, &fixture);
     suite.addTest(new SampleTest());
-    suite.addTest(new SampleTest2());
+    
+    SampleFixture sampleFixture;
+    suite.addTest(new SampleTest2(&sampleFixture));
     suite.config(config);
     suite.start();
 

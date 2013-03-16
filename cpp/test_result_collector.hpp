@@ -2,7 +2,6 @@
 #define IUNIT_CPP_TEST_RESULT_COLLECTOR_HPP
 
 #include <vector>
-#include "detail/test_result.hpp"
 #include "detail/test_outputter.hpp"
 
 namespace iunit {
@@ -49,23 +48,6 @@ namespace iunit {
         }
 
     protected:
-        //virtual void output(TestOutputter* outputter, TestResult* result, bool isLast) {
-        //    //if(result->_results.empty()) {
-        //    //    outputter->write(result);
-        //    //    return;
-        //    //}
-
-        //    //outputter->start(result, isLast);
-        //    //std::vector<TestResult*>::iterator ite = result->_results.begin();
-        //    //std::vector<TestResult*>::iterator end = result->_results.end();
-        //    //std::vector<TestResult*>::iterator last = result->_results.end();
-        //    //last--;
-        //    //for(; ite != end; ite++) {
-        //    //    output(outputter, *ite, ite == last);
-        //    //}
-        //    //outputter->end(result);
-
-        //}
     };
 
 };

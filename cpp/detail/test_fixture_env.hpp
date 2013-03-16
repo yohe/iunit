@@ -6,21 +6,24 @@
 
 namespace iunit {
     namespace detail {
-        class FixtureWrapperTest : public TestRunnable {
+        class FixtureWrapperTest {
             TestFixture* _fixture;
         public:
-            FixtureWrapperTest() : TestRunnable(""), _fixture(NULL) {}
+            FixtureWrapperTest() : _fixture(NULL) {}
+
             FixtureWrapperTest(TestFixture* fixture) :
-                TestRunnable(""), _fixture(fixture) {
+                _fixture(fixture) 
+            {
+                if(_fixture) {
+                    _fixture->setup();
+                }
             }
+
             ~FixtureWrapperTest() {
                 if(_fixture) {
                     _fixture->teardown();
                 }
             }
-        protected:
-            virtual void init() {}
-            virtual void runImpl(TestResult* result) {}
         };
 
         class FixtureConstructor {

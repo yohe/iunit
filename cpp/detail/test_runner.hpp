@@ -5,7 +5,6 @@
 #include <vector>
 #include <algorithm>
 #include "detail/test_result.hpp"
-#include "detail/test_runnable.hpp"
 #include "detail/test_util.hpp"
 #include "detail/test_exception_protector.hpp"
 
@@ -23,7 +22,8 @@ namespace iunit {
             void run(TestRunnable* owner,
                      TestResult* result,
                      std::vector<TestRunnable*>& tests,
-                     ExceptionProtector* protector) {
+                     ExceptionProtector* protector)
+            {
                 runImpl(owner, result, tests, protector);
             }
 
@@ -50,7 +50,8 @@ namespace iunit {
             virtual void runImpl(TestRunnable* owner,
                                  TestResult* result,
                                  std::vector<TestRunnable*> tests,
-                                 ExceptionProtector* protector) {
+                                 ExceptionProtector* protector)
+            {
                 for(int i=0; i < _repeatCount; ++i) {
                     std::vector<TestRunnable*> tmp = tests;
                     std::vector<TestRunnable*>::iterator test = tmp.begin();
@@ -58,6 +59,10 @@ namespace iunit {
                     // 登録されている全てのテストを実行
                     // テストケース毎にテスト結果を登録
                     for(; test != tmp.end(); test++) {
+                        (*test)->setParentPath(owner->getFullPath());
+                        if(_config->isSkipTest((*test)->getFullPath())) {
+                            continue;
+                        }
                         (*test)->config(*_config);
                         protector->protectedRun(owner, result, *test);
                     }
@@ -77,12 +82,17 @@ namespace iunit {
             virtual void runImpl(TestRunnable* owner,
                                  TestResult* result,
                                  std::vector<TestRunnable*> tests,
-                                 ExceptionProtector* protector) {
+                                 ExceptionProtector* protector)
+            {
                 std::vector<TestRunnable*> tmp(tests);
                 std::random_shuffle(tmp.begin(), tmp.end());
                 for(std::vector<TestRunnable*>::iterator test = tmp.begin();
                     test != tmp.end();
                     ++test) {
+                    (*test)->setParentPath(owner->getFullPath());
+                    if(_config->isSkipTest((*test)->getFullPath())) {
+                        continue;
+                    }
                     (*test)->config(*_config);
                     protector->protectedRun(owner, result, *test);
                 }
@@ -104,13 +114,13 @@ namespace iunit {
             virtual void runImpl(TestRunnable* owner,
                                  TestResult* result,
                                  std::vector<TestRunnable*> tests,
-                                 ExceptionProtector* protector) {
+                                 ExceptionProtector* protector)
+            {
                 for(int i=0; i < _repeatCount; ++i) {
                     ShuffleRunner::runImpl(owner, result, tests, protector);
                 }
             }
         };
-        
     };
 };
 

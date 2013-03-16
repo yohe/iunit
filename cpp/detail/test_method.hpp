@@ -6,8 +6,6 @@
 #include <vector>
 #include <iostream>
 
-#include "test_fixture.hpp"
-#include "test_result_collector.hpp"
 #include "detail/test_result.hpp"
 #include "detail/test_runnable.hpp"
 #include "detail/test_util.hpp"
@@ -35,14 +33,14 @@ namespace iunit {
                 {
                 }
                 virtual void call(TestResult* result) const {
-                    //_instance->ready(result);
+                    _instance->ready(result);
                     (_instance->*_method)();
                 }
             };
             
             template <class T>
             TestMethod(T* instance, void (T::*method)(), std::string className, std::string methodName) :
-                TestRunnable( className ),
+                TestRunnable( methodName ),
                 _className(className),
                 _methodName(methodName)
             {
@@ -78,20 +76,25 @@ namespace iunit {
                     result->set(test, 1, 0);
                 } catch (ErrorException& e) {
                     e.setTestName(test);
-                    Util::printException(e);
-                    result->addMessage(e.what());
+                    util::printException(e);
+                    result->setException(e);
                     result->set(test, 0, 1);
                     throw;
                 } catch (AssertException& e) {
                     e.setTestName(test);
-                    Util::printException(e);
-                    result->addMessage(e.what());
+                    util::printException(e);
+                    result->setException(e);
                     result->set(test, 0, 1);
                     throw;
                 }
             }
 
             virtual void init() {
+            }
+            
+            virtual void printTestPath(TestRunnable* parent) {
+                setParentPath(parent->getFullPath());
+                std::cout << getFullPath() << std::endl;
             }
 
         private:

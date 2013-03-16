@@ -2,6 +2,7 @@
 #define IUNIT_CPP_DETAIL_TEST_EXCEPTION_HPP
 
 #include <string>
+#include <sstream>
 
 namespace iunit {
     namespace detail {
