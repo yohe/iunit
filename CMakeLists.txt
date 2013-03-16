@@ -11,9 +11,9 @@ IF(APPLE)
     link_directories(/opt/local/lib /usr/lib)
 ENDIF(APPLE)
 
-ADD_EXECUTABLE(iunitdemo samples/cpp/main.cpp)
+ADD_EXECUTABLE(iunitdemo_cpp samples/cpp/main.cpp)
 
-set_target_properties(iunitdemo PROPERTIES COMPILE_FLAGS "-Wall -I ./cpp")
+set_target_properties(iunitdemo_cpp PROPERTIES COMPILE_FLAGS "-Wall -I ./cpp")
 
 set(CMAKE_CXX_FLAGS_DEBUG "-g")
 
