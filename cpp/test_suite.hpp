@@ -46,18 +46,19 @@ namespace iunit {
             // テストの実行
             // コレクタにテスト結果を渡して終了
 
-            init();
-            detail::TestResult* suiteResult = new detail::TestResult(getName());
-            ready(suiteResult);
+            if(_config.isSkipTest(getFullPath())) {
+                return;
+            }
             if(_config.isPrintPath()) {
                 printTestPath(NULL);
                 return;
             }
 
-            if(!_config.isSkipTest(getFullPath())) {
-                run(suiteResult);
-            }
-
+            init();
+            detail::TestResult* suiteResult = new detail::TestResult(getName());
+            ready(suiteResult);
+            run(suiteResult);
+            
             _collector.addResult(suiteResult);
         }
 
