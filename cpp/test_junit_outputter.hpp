@@ -8,8 +8,6 @@
 
 namespace iunit {
 
-    using namespace detail;
-
     class JUnitOutputter : public TextOutputter {
     public:
         JUnitOutputter(std::ostream& os) : TextOutputter(os), _index(0) {
@@ -17,7 +15,7 @@ namespace iunit {
             _os << std::fixed;
         }
 
-        virtual void start(TestResult* result = NULL, bool last = false) {
+        virtual void start(detail::TestResult* result = NULL, bool last = false) {
             assert(_indentCount < 2);
 
             if(result == NULL) {
@@ -48,7 +46,7 @@ namespace iunit {
             _indentCount++;
         }
 
-        virtual void write(TestResult* result) {
+        virtual void write(detail::TestResult* result) {
 
             std::string indent;
             for(int i = 0; i < _indentCount; ++i) {
@@ -80,7 +78,7 @@ namespace iunit {
             _os << indent << "</testcase>" << std::endl;
         }
 
-        virtual void end(TestResult* result = NULL) {
+        virtual void end(detail::TestResult* result = NULL) {
             if(result == NULL) {
                 _os << std::endl;
                 return;

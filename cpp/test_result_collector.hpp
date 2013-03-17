@@ -6,11 +6,9 @@
 
 namespace iunit {
 
-    using namespace detail;
-
     class CppTestResultCollector {
     protected:
-        std::vector<TestResult*> _rootResult;
+        std::vector<detail::TestResult*> _rootResult;
         bool _isSuccess;
 
     public:
@@ -23,14 +21,14 @@ namespace iunit {
         }
         
         virtual void clear() {
-            std::vector<TestResult*>::iterator ite = _rootResult.begin();
+            std::vector<detail::TestResult*>::iterator ite = _rootResult.begin();
             for(; ite != _rootResult.end(); ite++) {
                 delete *ite;
             }
             _rootResult.clear();
         }
 
-        virtual void addResult(TestResult* ret) {
+        virtual void addResult(detail::TestResult* ret) {
             _isSuccess &= ret->isSuccess();
             _rootResult.push_back(ret);
         }
@@ -39,7 +37,7 @@ namespace iunit {
             return _isSuccess;
         }
 
-        virtual void write(TestOutputter* outputter) {
+        virtual void write(detail::TestOutputter* outputter) {
             outputter->write(_rootResult);
         }
         

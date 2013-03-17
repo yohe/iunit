@@ -7,16 +7,14 @@
 
 namespace iunit {
 
-    using namespace detail;
-
-    class TextOutputter : public TestOutputter {
+    class TextOutputter : public detail::TestOutputter {
     public:
         TextOutputter(std::ostream& os) : _os(os), _indentCount(0) {
             _os.precision(3);
             _os << std::fixed;
         }
 
-        virtual void start(TestResult* result = NULL, bool last = false) {
+        virtual void start(detail::TestResult* result = NULL, bool last = false) {
             if(result == NULL) {
                 return;
             }
@@ -39,7 +37,7 @@ namespace iunit {
             _indentCount++;
         }
 
-        virtual void write(TestResult* result) {
+        virtual void write(detail::TestResult* result) {
             std::string indent = "";
             for(int i = 0; i < _indentCount; ++i) {
                 if(i == (_indentCount-1)) {
@@ -69,7 +67,7 @@ namespace iunit {
             }
         }
 
-        virtual void end(TestResult* result = NULL) {
+        virtual void end(detail::TestResult* result = NULL) {
             _indentCount--;
             if(result == NULL) {
                 return;

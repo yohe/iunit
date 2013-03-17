@@ -5,9 +5,6 @@
 #include <sstream>
 #include <detail/test_macros.hpp>
 
-using namespace iunit::detail;
-
-
 #define IUNIT_ADD_TEST( className, methodName ) \
     addTest(this, &className::methodName, #className, #methodName)
 

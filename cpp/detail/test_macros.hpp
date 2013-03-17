@@ -13,7 +13,7 @@
             ss << #TYPE << " :            " << #expected << " " << #OP << " " << #actual << std::endl; \
             ss << "        expected = " << expected << std::endl;\
             ss << "          actual = " << actual; \
-            throw TYPE ## Exception(ss.str(), file, line); \
+            throw detail::TYPE ## Exception(ss.str(), file, line); \
         } \
     }
 
@@ -25,7 +25,7 @@
             std::stringstream ss; \
             ss << #TYPE << " :            " << #expression << " did not throw " << #EXCEPTION << std::endl; \
             ss << "        expected = " << #expression << " should throw " << #EXCEPTION << std::endl;\
-            throw TYPE ## Exception(ss.str(), file, line); \
+            throw detail::TYPE ## Exception(ss.str(), file, line); \
         } catch ( EXCEPTION& e ) { \
             this->success(); \
         } \
@@ -41,7 +41,7 @@
             std::stringstream ss; \
             ss << #TYPE << " :            " << #expression << " threw exception." << std::endl; \
             ss << "        expected = " << #expression << " don't throw exception." << std::endl;\
-            throw TYPE ## Exception(ss.str(), file, line); \
+            throw detail::TYPE ## Exception(ss.str(), file, line); \
         } \
     }
 

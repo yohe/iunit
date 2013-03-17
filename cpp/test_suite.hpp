@@ -20,22 +20,21 @@
 namespace iunit {
     class TestFixture;
 
-    using namespace detail;
-    class CppTestSuite : public TestRunnable {
+    class CppTestSuite : public detail::TestRunnable {
     protected:
         std::string _name;                          // Suite Name
         CppTestResultCollector& _collector;         
-        std::vector<TestRunnable*> _testCases;       // TestCase in Suite
+        std::vector<detail::TestRunnable*> _testCases;       // TestCase in Suite
 
     public:
         CppTestSuite(const std::string& name, CppTestResultCollector& collector, TestFixture* fixture = NULL) 
-            : TestRunnable(name, fixture),
+            : detail::TestRunnable(name, fixture),
             _collector(collector)
         { }
 
         virtual ~CppTestSuite() {
-            std::vector<TestRunnable*>::iterator ite = _testCases.begin();
-            std::vector<TestRunnable*>::iterator end = _testCases.end();
+            std::vector<detail::TestRunnable*>::iterator ite = _testCases.begin();
+            std::vector<detail::TestRunnable*>::iterator end = _testCases.end();
 
             for(; ite != end; ite++) {
                 delete *ite;
@@ -48,7 +47,7 @@ namespace iunit {
             // コレクタにテスト結果を渡して終了
 
             init();
-            TestResult* suiteResult = new TestResult(getName());
+            detail::TestResult* suiteResult = new detail::TestResult(getName());
             ready(suiteResult);
             if(_config.isPrintPath()) {
                 printTestPath(NULL);
@@ -62,7 +61,7 @@ namespace iunit {
             _collector.addResult(suiteResult);
         }
 
-        virtual void addTest(TestRunnable* test) {
+        virtual void addTest(detail::TestRunnable* test) {
             _testCases.push_back(test);
         }
 
@@ -70,28 +69,28 @@ namespace iunit {
         virtual void init() {
         }
 
-        virtual void runImpl(TestResult* suiteResult) {
+        virtual void runImpl(detail::TestResult* suiteResult) {
             int repeat = 1;
             bool shuffle = _config.isShuffling();
             repeat = _config.repeateCount();
 
-            TestRunner* runner = 0;
+            detail::TestRunner* runner = 0;
             if(shuffle) {
-                runner = new RepeatableShuffleRunner(&_config, repeat);
+                runner = new detail::RepeatableShuffleRunner(&_config, repeat);
             } else {
-                runner = new RepeatableRunner(&_config, repeat);
+                runner = new detail::RepeatableRunner(&_config, repeat);
             }
 
-            ErrorProtector protector;
+            detail::ErrorProtector protector;
             try {
                 setParentPath("");
                 runner->run(this, suiteResult, _testCases, &protector);
-            } catch (AssertException& e){
+            } catch (detail::AssertException& e){
                 // nop
             } catch (std::exception& e) {
                 std::cout << "!!! Catch StdException !!!" << std::endl;
                 suiteResult->addMessage("!!! Catch StdException !!!" );
-                util::printException(e);
+                detail::util::printException(e);
             } catch (...) {
                 std::cout << "!!! Catch POD or other Exception !!!" << std::endl;
                 suiteResult->addMessage("!!! Catch POD or other Exception !!!" );
@@ -100,9 +99,9 @@ namespace iunit {
             delete runner;
         }
 
-        virtual void printTestPath(TestRunnable* parent) {
+        virtual void printTestPath(detail::TestRunnable* parent) {
             std::cout << getFullPath() << std::endl;
-            TestRunnable::PrintTestPathFunctor functor(this);
+            detail::TestRunnable::PrintTestPathFunctor functor(this);
             std::for_each(_testCases.begin(), _testCases.end(), functor);
         }
     };

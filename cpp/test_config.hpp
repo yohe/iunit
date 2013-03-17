@@ -7,6 +7,7 @@
 #include <ctime>
 
 #include "detail/test_util.hpp"
+
 class PrintString {
 public:
     void operator()(std::string str) {
@@ -64,7 +65,7 @@ namespace iunit {
                     if(pos == std::string::npos) {
                         error(argv[0]);
                     }
-                    _filter = util::splitFilter(str.substr(pos+1));
+                    _filter = detail::util::splitFilter(str.substr(pos+1));
                     //std::cout << _filter.size() << std::endl;
                     //PrintString printer;
                     //std::for_each(_filter.begin(), _filter.end(), printer);
