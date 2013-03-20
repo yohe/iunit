@@ -34,12 +34,8 @@ namespace iunit {
                               << name << DEFAULT_COLOR << std::endl;
                 }
             }
-            static void printException(TestException& e) {
-                std::cout << EXCEPTION_MESSAGE_COLOR << e.what()
-                          << DEFAULT_COLOR << std::endl;
-            }
-            static void printException(std::exception& e) {
-                std::cout << EXCEPTION_MESSAGE_COLOR << e.what()
+            static void printException(const char* exception) {
+                std::cout << EXCEPTION_MESSAGE_COLOR << exception
                           << DEFAULT_COLOR << std::endl;
             }
 

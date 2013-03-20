@@ -27,11 +27,40 @@ namespace iunit {
                 runImpl(owner, result, tests, protector);
             }
 
+            //template <class T>
+            //void runT(TestRunnable* owner,
+            //         TestResult* result,
+            //         std::vector<TestRunnable*>& tests,
+            //         ExceptionProtectorT<T>* protector)
+            //{
+            //    runImplT(owner, result, tests, protector);
+            //}
+
         protected:
             virtual void runImpl(TestRunnable* owner,
                                  TestResult* result,
                                  std::vector<TestRunnable*> tests,
                                  ExceptionProtector* protector) = 0;
+
+            virtual void runImplT(TestRunnable* owner,
+                                 TestResult* result,
+                                 std::vector<TestRunnable*> tests,
+                                 ExceptionProtector* protector) {
+
+                std::vector<TestRunnable*> tmp = tests;
+                std::vector<TestRunnable*>::iterator test = tmp.begin();
+
+                // 登録されている全てのテストを実行
+                // テストケース毎にテスト結果を登録
+                for(; test != tmp.end(); test++) {
+                    (*test)->setParentPath(owner->getFullPath());
+                    if(_config->isSkipTest((*test)->getFullPath())) {
+                        continue;
+                    }
+                    (*test)->config(*_config);
+                    protector->protectedRun(owner, result, *test);
+                }
+            }
 
         };
         

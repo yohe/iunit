@@ -59,14 +59,13 @@ namespace iunit {
                     _repeateCount = value;
                     continue;
                 }
-                if( str.find("--filter", 0, 8) != std::string::npos ) {
+                if( str.find("--exclude", 0, 8) != std::string::npos ) {
                     _useFilter = true;
                     size_t pos = str.find("=");
                     if(pos == std::string::npos) {
                         error(argv[0]);
                     }
                     _filter = detail::util::splitFilter(str.substr(pos+1));
-                    //std::cout << _filter.size() << std::endl;
                     //PrintString printer;
                     //std::for_each(_filter.begin(), _filter.end(), printer);
                     continue;
@@ -79,6 +78,7 @@ namespace iunit {
                     printUsage(argv[0]);
                     exit(0);
                 }
+                error(argv[0]);
             }
 
             return true;
@@ -90,12 +90,11 @@ namespace iunit {
             std::cout << "Usage: " << name << " [Option]" << std::endl;
             //std::cout << std::endl;
             std::cout << "Option:" << std::endl;
-            std::cout << "   --filter=testPath"<< std::endl;
-            std::cout << "        not support" << std::endl;
+            std::cout << "   --exclude=testPath"<< std::endl;
+            std::cout << "        Don't run the tests specified by test path." << std::endl;
             //std::cout << std::endl;
             std::cout << "   --print-path"<< std::endl;
             std::cout << "        Show the test path." << std::endl;
-            std::cout << "        not support" << std::endl;
             //std::cout << std::endl;
             std::cout << "   --repeat=count"<< std::endl;
             std::cout << "        Repeat a specified number of times.\n";

@@ -25,6 +25,27 @@ namespace iunit {
                 return true;
             }
         };
+        
+        class CheckFunctor {
+        public:
+            CheckFunctor(const char* actualStr, const char* filename, int line) : 
+                _actualStr(actualStr), _filename(filename), _line(line)
+            {
+            }
+
+            template <class T, class X>
+            void operator()(T actual, X expected) {
+                if( actual == expected ) {
+                    std::cout << "success." << std::endl;
+                } else {
+                    std::cout << "failed." << std::endl;
+                }
+            }
+            
+            const char* _actualStr;
+            const char* _filename;
+            int _line;
+        };
     };
 };
 

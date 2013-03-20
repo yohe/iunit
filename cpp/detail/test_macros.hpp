@@ -6,13 +6,14 @@
 #define IUNIT_DETAIL_CHECK_IMPL(expected, actual, file, line, OP, TYPE) \
     { \
         if( expected OP actual ) { \
-            this->success(); \
+            \
         } else { \
             this->failed(); \
             std::stringstream ss; \
-            ss << #TYPE << " :            " << #expected << " " << #OP << " " << #actual << std::endl; \
-            ss << "        expected = " << expected << std::endl;\
-            ss << "          actual = " << actual; \
+            ss << #TYPE << " :            " << #expected << " " << #OP << " " << #actual \
+               << " condition equation did not pass." << std::endl; \
+            ss << "        expected : " << expected << " "#OP" "#actual << std::endl;\
+            ss << "          actual : "#actual" = " << actual; \
             throw detail::TYPE ## Exception(ss.str(), file, line); \
         } \
     }
@@ -23,11 +24,11 @@
             expression; \
             this->failed(); \
             std::stringstream ss; \
-            ss << #TYPE << " :            " << #expression << " did not throw " << #EXCEPTION << std::endl; \
-            ss << "        expected = " << #expression << " should throw " << #EXCEPTION << std::endl;\
+            ss << #TYPE << " :            " << #expression << " did not throw " << #EXCEPTION"." << std::endl; \
+            ss << "        expected : " << #expression << " should throw " << #EXCEPTION"." << std::endl;\
             throw detail::TYPE ## Exception(ss.str(), file, line); \
         } catch ( EXCEPTION& e ) { \
-            this->success(); \
+            \
         } \
     }
 
@@ -35,14 +36,28 @@
     { \
         try { \
             expression; \
-            this->success(); \
+            \
         } catch ( ... ) { \
             this->failed(); \
             std::stringstream ss; \
             ss << #TYPE << " :            " << #expression << " threw exception." << std::endl; \
-            ss << "        expected = " << #expression << " don't throw exception." << std::endl;\
+            ss << "        expected : " << #expression << " don't throw exception." << std::endl;\
             throw detail::TYPE ## Exception(ss.str(), file, line); \
         } \
     }
+
+#define IUNIT_DETAIL_CHECK_IMPL_TEST(actual, file, line) \
+    iunit::detail::CheckFunctor obj(#actual, file, line);IUNIT_DETAIL_EXPECTED_2(actual)
+    
+#define IUNIT_DETAIL_EXPECTED_2(actual) \
+    obj(actual, 
+
+#define _Should_(expected) \
+    expected);
+#define _Should_Throw_(expected) \
+    expected);
+
+//#define IUNIT_DETAIL_EXPECTED( expected ) \
+//    obj(actual, expected);
 
 #endif /* end of include guard */

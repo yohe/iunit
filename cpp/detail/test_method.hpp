@@ -74,16 +74,18 @@ namespace iunit {
                 try {
                     _methodObj->call(result);
                     result->set(test, 1, 0);
-                } catch (ErrorException& e) {
+                } catch (TestException& e) {
                     e.setTestName(test);
-                    util::printException(e);
-                    result->setException(e);
+                    util::printException(e.what());
+                    result->setException(e.what());
                     result->set(test, 0, 1);
                     throw;
-                } catch (AssertException& e) {
-                    e.setTestName(test);
-                    util::printException(e);
-                    result->setException(e);
+                } catch (std::exception& e) {
+                    util::printException(e.what());
+                    result->setException(e.what());
+                    result->set(test, 0, 1);
+                    throw;
+                } catch (...) {
                     result->set(test, 0, 1);
                     throw;
                 }

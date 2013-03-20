@@ -24,7 +24,7 @@ namespace iunit {
     protected:
         std::string _name;                          // Suite Name
         CppTestResultCollector& _collector;         
-        std::vector<detail::TestRunnable*> _testCases;       // TestCase in Suite
+        std::vector<detail::TestRunnable*> _testCases;       // TestCase of Suite
 
     public:
         CppTestSuite(const std::string& name, CppTestResultCollector& collector, TestFixture* fixture = NULL) 
@@ -84,17 +84,16 @@ namespace iunit {
 
             detail::ErrorProtector protector;
             try {
-                setParentPath("");
                 runner->run(this, suiteResult, _testCases, &protector);
             } catch (detail::AssertException& e){
                 // nop
             } catch (std::exception& e) {
                 std::cout << "!!! Catch StdException !!!" << std::endl;
                 suiteResult->addMessage("!!! Catch StdException !!!" );
-                detail::util::printException(e);
+                detail::util::printException(e.what());
             } catch (...) {
                 std::cout << "!!! Catch POD or other Exception !!!" << std::endl;
-                suiteResult->addMessage("!!! Catch POD or other Exception !!!" );
+                suiteResult->addMessage("!!! Catch POD or non StdException !!!" );
             }
 
             delete runner;

@@ -16,6 +16,7 @@ namespace iunit {
                 _testName(testName),
                 _success(0),
                 _failed(0),
+                _checkTotal(0),
                 _runTime(0)
             {
             }
@@ -41,6 +42,7 @@ namespace iunit {
             void add(TestResult* child) {
                 _success+=child->_success;
                 _failed+=child->_failed;
+                _checkTotal+=child->_checkTotal;
                 _results.push_back(child);
             }
             
@@ -72,8 +74,8 @@ namespace iunit {
                 }
                 _oss << str;
             }
-            void setException(TestException& e) {
-                _exceptionMessage = e.what();
+            void setException(const char* exception) {
+                _exceptionMessage = exception;
             }
             
             const std::string message() {
@@ -88,6 +90,7 @@ namespace iunit {
             std::string _testName;
             size_t _success;
             size_t _failed;
+            size_t _checkTotal;
             std::vector<TestResult*> _results;
             std::ostringstream _oss;
             std::string _exceptionMessage;

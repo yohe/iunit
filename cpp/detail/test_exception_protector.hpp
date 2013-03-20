@@ -12,73 +12,38 @@ namespace iunit {
         public:
             virtual void protectedRun(TestRunnable* owner, 
                                       TestResult* parent,
+                                      TestRunnable* test) = 0;
+        };
+
+        template <class T>
+        class GeneralExceptionProtector : public ExceptionProtector {
+            typedef T exception_type;
+        public:
+            virtual void protectedRun(TestRunnable* owner, 
+                                      TestResult* parent,
                                       TestRunnable* test) {
                 FixtureConstructor env(owner);
                 TestResult* testResult = new TestResult(test->getName());
                 try {
                     test->run(testResult);
                     parent->add(testResult);
-                } catch (...) {
+                } catch (exception_type& e) {
+                    test->failed();
                     parent->add(testResult);
+                } catch (...) {
+                    test->failed();
+                    parent->add(testResult);
+                    throw;
                 }
             }
         };
         
-        class NonProtector : public ExceptionProtector {
-        public:
-            virtual void protectedRun(TestRunnable* owner, 
-                                      TestResult* parent,
-                                      TestRunnable* test) {
-                FixtureConstructor env(owner);
-                TestResult* testResult = new TestResult(test->getName());
-                try {
-                    test->run(testResult);
-                    parent->add(testResult);
-                } catch (...) {
-                    parent->add(testResult);
-                    throw;
-                }
-            }
+        struct DummyException {
         };
 
-        class ErrorProtector : public ExceptionProtector {
-        public:
-            virtual void protectedRun(TestRunnable* owner, 
-                                      TestResult* parent,
-                                      TestRunnable* test) {
-                FixtureConstructor env(owner);
-                TestResult* testResult = new TestResult(test->getName());
-                try {
-                    test->run(testResult);
-                    parent->add(testResult);
-                } catch (ErrorException& e) {
-                    parent->add(testResult);
-                } catch (...) {
-                    parent->add(testResult);
-                    throw;
-                }
-            }
-        };
-
-        class AssertProtector : public ExceptionProtector {
-        public:
-            virtual void protectedRun(TestRunnable* owner, 
-                                      TestResult* parent,
-                                      TestRunnable* test) {
-                FixtureConstructor env(owner);
-                TestResult* testResult = new TestResult(test->getName());
-                try {
-                    test->run(testResult);
-                    parent->add(testResult);
-                } catch (AssertException& e) {
-                    parent->add(testResult);
-                } catch (...) {
-                    parent->add(testResult);
-                    throw;
-                }
-            }
-        };
-
+        typedef GeneralExceptionProtector<ErrorException> ErrorProtector;
+        typedef GeneralExceptionProtector<DummyException> NonProtector;
+        typedef GeneralExceptionProtector<AssertException> AssertProtector;
     };
 };
 

@@ -40,11 +40,11 @@ namespace iunit {
                 return _line;
             }
             
-            std::string what() const {
+            const char* what() const {
                 std::stringstream ss;
                 ss << _file << "(" << _line << ")" << std::endl;
                 ss << _message;
-                return ss.str();
+                return ss.str().c_str();
             }
 
         protected:
@@ -65,11 +65,11 @@ namespace iunit {
 
             virtual ~AssertException() {}
             
-            std::string what() const {
+            const char* what() const {
                 std::stringstream ss;
                 ss << "!!! Assertion !!!" << std::endl;
                 ss << TestException::what();
-                return ss.str();
+                return ss.str().c_str();
             }
         };
 

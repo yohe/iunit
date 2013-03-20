@@ -16,10 +16,10 @@ namespace iunit {
             friend class FixtureConstructor;
         public:
             TestRunnable(const std::string& name, TestFixture* fixture = NULL) :
-                _success(0),
-                _failed(0),
+                _failed(false),
                 _name(name),
-                _result(NULL)
+                _result(NULL),
+                _parentPath("")
             {
                 _fixture = fixture;
             }
@@ -38,13 +38,7 @@ namespace iunit {
                 return _result;
             }
 
-            virtual bool isSuccessful() const {
-                return _failed == 0;
-            }
-            virtual size_t getSuccessCount() const {
-                return _success;
-            }
-            virtual size_t getFailedCount() const {
+            virtual bool isSuccess() const {
                 return _failed;
             }
             virtual std::string getName() const {
@@ -69,22 +63,19 @@ namespace iunit {
                     test->printTestPath(_parent);
                 }
             };
+            
+            virtual void failed() {
+                _failed = true;
+            }
+
         protected:
 
             virtual void runImpl(TestResult* result) = 0;
 
-            virtual void success() {
-                ++_success;
-            }
-            virtual void failed() {
-                ++_failed;
-            }
-
             virtual void printTestPath(TestRunnable* parent) {
             }
 
-            size_t _success;
-            size_t _failed;
+            bool _failed;
             std::string _name;
             TestFixture* _fixture;
             TestResult* _result;

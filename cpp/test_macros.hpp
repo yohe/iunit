@@ -88,5 +88,8 @@
 #define IUNIT_ASSERT_NO_THROW( expression ) \
     IUNIT_DETAIL_CHECK_NO_THROW_IMPL( expression, __FILE__, __LINE__, Assert)
 
+#define IUNIT_TEST( actual ) \
+    IUNIT_DETAIL_CHECK_IMPL_TEST( actual, __FILE__, __LINE__ )
+
 #endif /* end of include guard */
 
