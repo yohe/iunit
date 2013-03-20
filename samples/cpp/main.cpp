@@ -35,11 +35,11 @@ public:
 
     void test_1() {
         IUNIT_MESSAGE( "Test 1 Start" );
-        IUNIT_EQ(value(), 2);
-        IUNIT_ASSERT_EQ(value(), 2);
-        IUNIT_NE(value(), 3);
-        IUNIT_ASSERT_NE(value(), 3);
         int* a = new int(1);
+        IUNIT_EQ(2, value());
+        IUNIT_ASSERT_EQ(2, value());
+        IUNIT_NE(3, value());
+        IUNIT_ASSERT_NE(value(), 3);
         IUNIT_MESSAGE("int* a = new int(1)");
         IUNIT_NULL(NULL);
         IUNIT_ASSERT_NULL(NULL);
@@ -50,14 +50,14 @@ public:
     }
     void test_2() {
         IUNIT_MESSAGE( "Test 2 Start" );
-        IUNIT_LE(2, 2)
-        IUNIT_LT(2, 1)
-        IUNIT_GE(2, 2)
-        IUNIT_GT(2, 3)
-        IUNIT_ASSERT_LE(2, 2)
-        IUNIT_ASSERT_LT(2, 1)
-        IUNIT_ASSERT_GE(2, 2)
-        IUNIT_ASSERT_GT(2, 3)
+        IUNIT_LE(2, value());
+        IUNIT_LT(2, value()-1);
+        IUNIT_GE(2, value());
+        IUNIT_GT(2, value()+1);
+        IUNIT_ASSERT_LE(2, 2);
+        IUNIT_ASSERT_LT(2, 1);
+        IUNIT_ASSERT_GE(2, 2);
+        IUNIT_ASSERT_GT(2, 3);
         sleep(1);
     }
     void test_3() {
@@ -77,6 +77,11 @@ public:
         //IUNIT_THROW(value(), std::exception);
         //IUNIT_ASSERT_NO_THROW(throwException());
         //IUNIT_ASSERT_THROW(value(), std::exception);
+        //IUNIT_TEST(a)_Should_EQ((int*)0);
+        //IUNIT_TEST(a)_Should_NE((int*)0);
+        //IUNIT_TEST(a)_Should_THROW((int*)0);
+        //IUNIT_TEST(a)_Should_NOT_THROW((int*)0);
+
     }
     
     virtual void init() {
@@ -122,6 +127,7 @@ public:
         IUNIT_EQ(value, 5);
         minus(1);
         IUNIT_EQ(value, 4);
+        
     }
     
     virtual void init() {
