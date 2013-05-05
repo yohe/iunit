@@ -73,7 +73,7 @@ namespace iunit {
             }
         };
 
-        class ErrorException : public TestException{
+        class ErrorException : public TestException {
         public:
             ErrorException (const std::string& message,
                             const std::string& file,
@@ -84,6 +84,16 @@ namespace iunit {
 
             virtual ~ErrorException() {}
         };
+
+        class DummyException : public TestException {
+            DummyException (const std::string& message,
+                            const std::string& file,
+                            size_t line) : 
+                TestException(message, file, line)
+            {
+            }
+        };
+
 
     };
 };

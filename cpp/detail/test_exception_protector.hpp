@@ -38,9 +38,6 @@ namespace iunit {
             }
         };
         
-        struct DummyException {
-        };
-
         typedef GeneralExceptionProtector<ErrorException> ErrorProtector;
         typedef GeneralExceptionProtector<DummyException> NonProtector;
         typedef GeneralExceptionProtector<AssertException> AssertProtector;
