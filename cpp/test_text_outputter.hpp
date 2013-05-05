@@ -57,13 +57,16 @@ namespace iunit {
             _os << " " << indent << result->testName() << " : "
                 << result->getRunTime() << "[ms]"<< std::endl;
 
-            if(result->isSuccess()) {
-                // nop
-            } else {
-                std::string message = result->message();
-                std::string messageIndent = indent+indent+ " >  ";
-                indentMessage(message, messageIndent);
-                _os << messageIndent << message << std::endl;
+            std::string messageIndent = indent+indent+ " >  ";
+            std::string message = result->message();
+            indentMessage(message, messageIndent);
+            _os << message << std::endl;
+
+            if(!result->isSuccess()) {
+                _os << messageIndent << "[Exception]" << std::endl;
+                std::string exception = result->exceptionMessage();
+                indentMessage(exception, messageIndent);
+                _os << exception << std::endl;
             }
         }
 
@@ -75,6 +78,7 @@ namespace iunit {
         }
     protected:
         virtual void indentMessage(std::string& message, const std::string& indent) {
+            message.insert(0, indent);
             size_t pos = message.find('\n');
             while( pos != std::string::npos) {
                 message.insert(pos+1, indent);

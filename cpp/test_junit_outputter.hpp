@@ -65,16 +65,16 @@ namespace iunit {
 
             if(!result->isSuccess()) {
                 _os  << indent << "  <failure message=\""
-                     << result->_exceptionMessage
+                     << result->exceptionMessage()
                      << "\" type=\"\">"
                      << std::endl;
                 //_os << result->message() << std::endl;
                 _os << indent << "  </failure>" << std::endl;
             }
-                _os << indent << indent << "<system-out>" << std::endl;
-                _os << result->message() << std::endl;
-                _os << indent << indent << "<system-out />" << std::endl;
-                _os << indent << indent << "<system-err />" << std::endl;
+            _os << indent << indent << "<system-out>" << std::endl;
+            _os << result->message() << std::endl;
+            _os << indent << indent << "<system-out />" << std::endl;
+            _os << indent << indent << "<system-err />" << std::endl;
             _os << indent << "</testcase>" << std::endl;
         }
 
