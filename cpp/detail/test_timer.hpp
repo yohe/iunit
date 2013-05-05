@@ -47,7 +47,11 @@ namespace iunit {
              * @return 経過時間
              */
             double elapsed() const {
-                return now() - _setTime;
+                if(_pause) {
+                    return _pauseTime - _setTime;
+                } else {
+                    return now() - _setTime;
+                }
             }
 
             /**
