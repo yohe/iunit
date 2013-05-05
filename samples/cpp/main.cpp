@@ -45,7 +45,6 @@ public:
         IUNIT_ASSERT_NULL(NULL);
         IUNIT_NOT_NULL(a);
         IUNIT_ASSERT_NOT_NULL(a);
-        sleep(2);
         delete a;
     }
     void test_2() {
@@ -58,7 +57,6 @@ public:
         IUNIT_ASSERT_LT(2, 1);
         IUNIT_ASSERT_GE(2, 2);
         IUNIT_ASSERT_GT(2, 3);
-        sleep(1);
     }
     void test_3() {
         IUNIT_MESSAGE( "Test 3 Start" );
@@ -136,7 +134,6 @@ public:
     }
 };
 
-
 class SuiteFixture : public TestFixture {
 public:
     virtual void setup() {
@@ -180,8 +177,8 @@ int main(int argc, char const* argv[])
     std::ofstream ofs("result.txt");
     TextOutputter outputter(ofs);
     JUnitOutputter outputter2(xml_ofs);
-    collector.write(&outputter2);
     collector.write(&outputter);
+    collector.write(&outputter2);
     return (collector.isSuccessful() ? 0 : -1);
 }
 
