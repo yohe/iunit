@@ -9,8 +9,14 @@
     addTest(this, &className::methodName, #className, #methodName)
 
 #define IUNIT_MESSAGE( message )   \
-    std::cout << message << std::endl; \
-    currentResult()->addMessage(message);
+    IUNIT_MESSAGE_DETAIL( this, message)
+
+#define IUNIT_MESSAGE_OUTSIDE_TEST(test, message ) \
+    IUNIT_MESSAGE_DETAIL( test, message)
+
+#define IUNIT_PATTERN_TESTER(tester) \
+    tester.test(this, __FILE__, __LINE__)
+
     
 //------------------------------------------------------------------------
 // Normal Check

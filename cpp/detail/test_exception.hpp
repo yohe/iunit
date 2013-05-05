@@ -71,6 +71,10 @@ namespace iunit {
                 ss << TestException::what();
                 return ss.str().c_str();
             }
+
+            static std::string getExceptionType() {
+                return "Assert";
+            }
         };
 
         class ErrorException : public TestException {
@@ -83,6 +87,11 @@ namespace iunit {
             }
 
             virtual ~ErrorException() {}
+
+            static std::string getExceptionType() {
+                return "Error";
+            }
+
         };
 
         class DummyException : public TestException {

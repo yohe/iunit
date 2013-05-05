@@ -3,6 +3,11 @@
 
 #include "detail/test_equal_checker.hpp"
 
+#define IUNIT_MESSAGE_DETAIL(test, message ) \
+    std::cout << message << std::endl; \
+    test->currentResult()->addMessage(message);
+
+
 #define IUNIT_DETAIL_CHECK_IMPL(expected, actual, file, line, OP, TYPE) \
     { \
         if( expected OP actual ) { \

@@ -6,6 +6,7 @@
 #include <test_junit_outputter.hpp>
 #include <test_macros.hpp>
 #include <test_config.hpp>
+#include <test_io_tester.hpp>
 
 #include <fstream>
 #include <exception>
@@ -60,7 +61,7 @@ public:
     }
     void test_3() {
         IUNIT_MESSAGE( "Test 3 Start" );
-        IUNIT_TRUE( 1==1 );
+        IUNIT_TRUE( 1==2 );
         IUNIT_FALSE( 1==2 );
         IUNIT_ASSERT_TRUE( 1==1 );
         IUNIT_ASSERT_FALSE( 1==2 );
@@ -93,6 +94,7 @@ public:
 
 class SampleTest : public CppTestCase {
     int value;
+
 public:
     SampleTest() : CppTestCase("SampleTest") {
         value = 0;
@@ -125,13 +127,57 @@ public:
         IUNIT_EQ(value, 5);
         minus(1);
         IUNIT_EQ(value, 4);
-        
     }
-    
+    void test_pattern() {
+        IUNIT_MESSAGE( "Test pattern Start" );
+
+        PatternData data;
+        std::vector<std::pair<PatternData, bool> > spec;
+        data.x = 1; data.y = 1, data.z = 1;
+        spec.push_back(std::pair<PatternData, bool>(data, true));
+        data.x = 1; data.y = 1, data.z = 2;
+        spec.push_back(std::pair<PatternData, bool>(data, false));
+        data.x = 1; data.y = 2, data.z = 1;
+        spec.push_back(std::pair<PatternData, bool>(data, false));
+        data.x = 1; data.y = 2, data.z = 2;
+        spec.push_back(std::pair<PatternData, bool>(data, false));
+        XyzFunctor func(this);
+        IOPatternTester<PatternData, bool, XyzFunctor> tester(spec, func, "XyzPatternTest");
+        IUNIT_PATTERN_TESTER(tester);
+
+        sleep(2);
+    }
+
+    bool xyz(int x, int y, int z) {
+        if(x == y && x == z) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     virtual void init() {
         IUNIT_ADD_TEST( SampleTest, test_plus );
         IUNIT_ADD_TEST( SampleTest, test_minus );
+        IUNIT_ADD_TEST( SampleTest, test_pattern );
     }
+private:
+    struct PatternData {
+        int x;
+        int y;
+        int z;
+    };
+    class XyzFunctor {
+        SampleTest* _obj;
+    public:
+        XyzFunctor(SampleTest* obj) : _obj(obj) {}
+        bool operator()(PatternData p) {
+            std::stringstream ss;
+            ss << "X = " << p.x << ", Y = " << p.y << ", Z = " << p.z;
+            IUNIT_MESSAGE_OUTSIDE_TEST(_obj, ss.str());
+            return _obj->xyz(p.x, p.y, p.z);
+        }
+    };
 };
 
 class SuiteFixture : public TestFixture {
