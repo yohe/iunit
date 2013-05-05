@@ -53,11 +53,12 @@ namespace iunit {
                 }
             };
 
-            class TeeStream {
+            class TeeStream : public std::ostream{
                 std::ostream& _os1;
                 std::ostream& _os2;
             public:
                 TeeStream(std::ostream& os1, std::ostream& os2) :
+                    std::ostream(os1.rdbuf()),
                     _os1(os1), _os2(os2)
                 {
                 }

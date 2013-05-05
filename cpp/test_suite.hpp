@@ -15,6 +15,7 @@
 #include "detail/test_runner.hpp"
 #include "detail/test_exception_protector.hpp"
 #include "detail/test_fixture_env.hpp"
+#include "detail/test_util.hpp"
 
 
 namespace iunit {
@@ -86,7 +87,7 @@ namespace iunit {
             try {
                 runner->run(this, suiteResult, _testCases, &protector);
             } catch (detail::AssertException& e){
-                // nop
+                suiteResult->addMessage(e.what());
             } catch (std::exception& e) {
                 std::cout << "!!! Catch StdException !!!" << std::endl;
                 suiteResult->addMessage("!!! Catch StdException !!!" );

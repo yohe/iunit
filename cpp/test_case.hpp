@@ -76,11 +76,6 @@ namespace iunit {
         clear();
         init();
         
-        //if(_config.isPrintPath()) {
-        //    printTestPath(testCaseResult);
-        //    return;
-        //}
-
         bool shuffle = _config.isShuffling();
         detail::TestRunner* runner = 0;
         if(shuffle) {

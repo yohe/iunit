@@ -69,7 +69,7 @@ namespace iunit {
             }
             
             void addMessage(const std::string& str) {
-                if(_oss.tellp() != 0) {
+                if(_oss.str().length() != 0) {
                     _oss << std::endl;
                 }
                 _oss << str;
@@ -80,6 +80,9 @@ namespace iunit {
             
             const std::string message() {
                 return _oss.str();
+            }
+            const std::string exceptionMessage() {
+                return _exceptionMessage;
             }
 
             void printOn( std::ostream& os ) {

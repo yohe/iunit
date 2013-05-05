@@ -81,7 +81,6 @@ namespace iunit {
                     result->set(test, 0, 1);
                     throw;
                 } catch (std::exception& e) {
-                    util::printException(e.what());
                     result->setException(e.what());
                     result->set(test, 0, 1);
                     throw;
