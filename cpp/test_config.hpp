@@ -91,7 +91,9 @@ namespace iunit {
             //std::cout << std::endl;
             std::cout << "Option:" << std::endl;
             std::cout << "   --exclude=testPath"<< std::endl;
-            std::cout << "        Don't run the tests specified by test path." << std::endl;
+            std::cout << "        You can specify the test path that you want to exclude." << std::endl;
+            std::cout << "        Exclusion target can specify multiple by the comma separated." << std::endl;
+            std::cout << "        TestPath : /Suite name/Test name/Test name/...[,/Suite name/Test name/..." << std::endl;
             //std::cout << std::endl;
             std::cout << "   --print-path"<< std::endl;
             std::cout << "        Show the test path." << std::endl;
