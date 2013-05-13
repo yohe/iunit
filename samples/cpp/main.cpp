@@ -61,7 +61,7 @@ public:
     }
     void test_3() {
         IUNIT_MESSAGE( "Test 3 Start" );
-        IUNIT_TRUE( 1==2 );
+        IUNIT_TRUE( 1==1 );
         IUNIT_FALSE( 1==2 );
         IUNIT_ASSERT_TRUE( 1==1 );
         IUNIT_ASSERT_FALSE( 1==2 );

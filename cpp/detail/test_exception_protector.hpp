@@ -16,7 +16,7 @@ namespace iunit {
         };
 
         template <class T>
-        class GeneralExceptionProtector : public ExceptionProtector {
+        class GeneralizedExceptionProtector : public ExceptionProtector {
             typedef T exception_type;
         public:
             virtual void protectedRun(TestRunnable* owner, 
@@ -38,9 +38,9 @@ namespace iunit {
             }
         };
         
-        typedef GeneralExceptionProtector<ErrorException> ErrorProtector;
-        typedef GeneralExceptionProtector<DummyException> NonProtector;
-        typedef GeneralExceptionProtector<AssertException> AssertProtector;
+        typedef GeneralizedExceptionProtector<ErrorException> ErrorProtector;
+        typedef GeneralizedExceptionProtector<DummyException> NonProtector;
+        typedef GeneralizedExceptionProtector<AssertException> AssertProtector;
     };
 };
 
