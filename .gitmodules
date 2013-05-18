@@ -1,0 +1,3 @@
+[submodule "tools/cli_lib"]
+	path = tools/cli_lib
+	url = git://github.com/yohe/CLI-DevTool.git
