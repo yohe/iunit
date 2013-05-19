@@ -150,8 +150,7 @@ namespace iunit {
             //std::cout << std::endl;
             std::cout << "   --shuffle"<< std::endl;
             std::cout << "        Shuffle is performed as follows:\n"
-                      << "          1. Execute any one test case "
-                                       "that is included a test suite.\n"
+                      << "          1. Execute any one test case in the test suite.\n"
                       << "          2. Executed test case execute the test function"
                                        " or test case that\n"
                       << "             is included in oneself in the random order."
@@ -178,7 +177,6 @@ namespace iunit {
             if(isExclude(path)) {
                 return !isInclude(path);
             }
-            std::cout << path << " is not skip." << std::endl;
             return false;
         }
     };

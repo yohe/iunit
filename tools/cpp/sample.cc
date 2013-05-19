@@ -26,7 +26,7 @@ public:
     virtual ~IunitCommand() {}
 
     virtual std::string getKey() const { return "test"; }
-    virtual std::string printHelp() const { return "sample command."; }
+    virtual std::string printHelp() const { return "Execute bin/cpp/iunitdemo_cpp."; }
     virtual std::string execute(std::string parameter) const {
         std::string cmd = "../../bin/cpp/iunitdemo_cpp ";
         cmd += parameter;
@@ -35,6 +35,8 @@ public:
     }
     virtual void getParamCandidates(std::vector<std::string>& inputtedList, std::string inputting, std::vector<std::string>& candidates) const {
         if(inputting.find("--exclude=") != std::string::npos) {
+            getExcludeList(inputting, candidates);
+        } else if(inputting.find("--include=") != std::string::npos) {
             getExcludeList(inputting, candidates);
         } else {
             OptionCheckFunctor shuffle("--shuffle");
@@ -48,6 +50,14 @@ public:
             OptionCheckFunctor exclude("--exclude");
             if(std::find_if(inputtedList.begin(), inputtedList.end(), exclude) == inputtedList.end()) {
                 candidates.push_back("--exclude=");
+            }
+            OptionCheckFunctor include("--include");
+            if(std::find_if(inputtedList.begin(), inputtedList.end(), include) == inputtedList.end()) {
+                candidates.push_back("--include=");
+            }
+            OptionCheckFunctor printPath("--print-path");
+            if(std::find_if(inputtedList.begin(), inputtedList.end(), printPath) == inputtedList.end()) {
+                candidates.push_back("--print-path");
             }
             OptionCheckFunctor help("--help");
             if(std::find_if(inputtedList.begin(), inputtedList.end(), help) == inputtedList.end()) {
@@ -128,7 +138,7 @@ public:
     class ExcludeCandidatesCleaner {
     public:
         void operator()(std::string& candidate) {
-            if(candidate == "--exclude=" || candidate == "--repeat=") {
+            if(candidate == "--exclude=" || candidate == "--include=" || candidate == "--repeat=") {
                 return;
             }
             size_t pos = candidate.rfind(",");
