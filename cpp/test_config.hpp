@@ -21,11 +21,42 @@ namespace iunit {
         int _repeateCount;
         bool _useFilter;
         bool _printTestPath;
-        std::set<std::string> _filter;
+        std::set<std::string> _excludeFilter;
+        std::set<std::string> _includeFilter;
 
         void error(const char* exe) {
             printUsage(exe);
             exit(1);
+        }
+
+        bool isExclude(const std::string& path) {
+            return isContainerPath(path, _excludeFilter.begin(), _excludeFilter.end(), false);
+        }
+        bool isInclude(const std::string& path) {
+            return isContainerPath(path, _includeFilter.begin(), _includeFilter.end(), true);
+        }
+
+        template <typename Iterator>
+        bool isContainerPath(std::string path, Iterator begin, Iterator end, bool include) {
+            path.append(1, '/');
+            Iterator ite = begin;
+            for(; ite != end; ++ite ) {
+                std::string filter = *ite;
+                if(filter.at(filter.length()-1) != '/') {
+                    filter.append(1, '/');
+                }
+
+                if(path == filter) {
+                    return true;
+                }
+                if(path.find(filter) == 0) {
+                    return true;
+                }
+                if(include && (filter.find(path) == 0)) {
+                    return true;
+                }
+            }
+            return false;
         }
 
     public:
@@ -65,7 +96,18 @@ namespace iunit {
                     if(pos == std::string::npos) {
                         error(argv[0]);
                     }
-                    _filter = detail::util::splitFilter(str.substr(pos+1));
+                    _excludeFilter = detail::util::splitFilter(str.substr(pos+1));
+                    //PrintString printer;
+                    //std::for_each(_filter.begin(), _filter.end(), printer);
+                    continue;
+                }
+                if( str.find("--include", 0, 8) != std::string::npos ) {
+                    _useFilter = true;
+                    size_t pos = str.find("=");
+                    if(pos == std::string::npos) {
+                        error(argv[0]);
+                    }
+                    _includeFilter = detail::util::splitFilter(str.substr(pos+1));
                     //PrintString printer;
                     //std::for_each(_filter.begin(), _filter.end(), printer);
                     continue;
@@ -93,6 +135,11 @@ namespace iunit {
             std::cout << "   --exclude=testPath"<< std::endl;
             std::cout << "        You can specify the test path that you want to exclude." << std::endl;
             std::cout << "        Exclusion target can specify multiple by the comma separated." << std::endl;
+            std::cout << "        TestPath : /Suite name/Test name/Test name/...[,/Suite name/Test name/..." << std::endl;
+            std::cout << "   --include=testPath"<< std::endl;
+            std::cout << "        You can specify the test path that you want to include always." << std::endl;
+            std::cout << "        This test is executed, even if you specified to exclude it." << std::endl;
+            std::cout << "        Inclusion target can specify multiple by the comma separated." << std::endl;
             std::cout << "        TestPath : /Suite name/Test name/Test name/...[,/Suite name/Test name/..." << std::endl;
             //std::cout << std::endl;
             std::cout << "   --print-path"<< std::endl;
@@ -128,7 +175,11 @@ namespace iunit {
             return _printTestPath;
         }
         bool isSkipTest(const std::string& path) {
-            return _filter.count(path) == 1;
+            if(isExclude(path)) {
+                return !isInclude(path);
+            }
+            std::cout << path << " is not skip." << std::endl;
+            return false;
         }
     };
 };
