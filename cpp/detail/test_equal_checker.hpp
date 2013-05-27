@@ -34,11 +34,11 @@ namespace iunit {
             }
 
             template <class T, class X>
-            void operator()(T actual, X expected) {
+            bool operator()(T actual, X expected) {
                 if( actual == expected ) {
-                    std::cout << "success." << std::endl;
+                    return true;
                 } else {
-                    std::cout << "failed." << std::endl;
+                    return false;
                 }
             }
             
@@ -46,7 +46,7 @@ namespace iunit {
             const char* _filename;
             int _line;
         };
-    };
-};
+    }
+}
 
 #endif /* end of include guard */

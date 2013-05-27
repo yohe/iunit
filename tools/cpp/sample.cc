@@ -21,14 +21,32 @@ class IunitCommand : public Command {
             }
         };
     };
+    class ExcludeCandidatesCleaner {
+    public:
+        void operator()(std::string& candidate) {
+            if(candidate == "--exclude=" || candidate == "--include=" || candidate == "--repeat=") {
+                return;
+            }
+            size_t pos = candidate.rfind(",");
+            if(pos != std::string::npos) {
+                candidate = candidate.substr(pos+1);
+            } else {
+                candidate = candidate.substr(candidate.find("=")+1);
+            }
+        }
+    };
+
+    std::string _cmd;
 public:
-    IunitCommand() {}
+    IunitCommand() {
+        _cmd = "../../bin/cpp/iunitdemo_cpp ";
+    }
     virtual ~IunitCommand() {}
 
-    virtual std::string getKey() const { return "test"; }
+    virtual std::string getKey() const { return "run"; }
     virtual std::string printHelp() const { return "Execute bin/cpp/iunitdemo_cpp."; }
     virtual std::string execute(std::string parameter) const {
-        std::string cmd = "../../bin/cpp/iunitdemo_cpp ";
+        std::string cmd = _cmd;
         cmd += parameter;
         system(cmd.c_str());
         return "";
@@ -91,7 +109,7 @@ public:
 
         // テストパス情報の取得
         FILE* in_pipe = NULL;
-        std::string cmd = "../../bin/cpp/iunitdemo_cpp --print-path";
+        std::string cmd = _cmd + "--print-path";
         in_pipe = popen(cmd.c_str(), "r");
         std::stringstream paramList("");
         char buffer[512+1] = {0};
@@ -135,20 +153,6 @@ public:
         std::for_each(candidates.begin(), candidates.end(), func);
     }
     
-    class ExcludeCandidatesCleaner {
-    public:
-        void operator()(std::string& candidate) {
-            if(candidate == "--exclude=" || candidate == "--include=" || candidate == "--repeat=") {
-                return;
-            }
-            size_t pos = candidate.rfind(",");
-            if(pos != std::string::npos) {
-                candidate = candidate.substr(pos+1);
-            } else {
-                candidate = candidate.substr(candidate.find("=")+1);
-            }
-        }
-    };
 private:
 };
 

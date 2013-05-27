@@ -112,7 +112,7 @@ namespace iunit {
         int _index;
     };
 
-};
+}
 
 #endif /* end of include guard */
 

@@ -180,6 +180,6 @@ namespace iunit {
             return false;
         }
     };
-};
+}
 
 #endif /* end of include guard */

@@ -15,6 +15,6 @@ ADD_EXECUTABLE(console sample.cc ../cli_lib/key_seq.cc ../cli_lib/key_map.cc)
 #ADD_EXECUTABLE(test/test_main test/main.cpp key_seq.cc key_map.cc)
 
 set_target_properties(console PROPERTIES LINK_FLAGS -lncurses)
-set_target_properties(console PROPERTIES COMPILE_FLAGS "-Wall -I ../cli_lib")
+set_target_properties(console PROPERTIES COMPILE_FLAGS "-Wall -ansi -pedantic -I ../cli_lib")
 
 set(CMAKE_CXX_FLAGS_DEBUG "-g")

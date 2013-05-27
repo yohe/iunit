@@ -41,7 +41,7 @@ namespace iunit {
         typedef GeneralizedExceptionProtector<ErrorException> ErrorProtector;
         typedef GeneralizedExceptionProtector<DummyException> NonProtector;
         typedef GeneralizedExceptionProtector<AssertException> AssertProtector;
-    };
-};
+    }
+}
 
 #endif /* end of include guard */

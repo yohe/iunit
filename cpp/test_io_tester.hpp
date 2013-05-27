@@ -50,6 +50,6 @@ namespace iunit {
         }
     };
 
-};
+}
 
 #endif /* end of include guard */

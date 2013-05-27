@@ -92,6 +92,6 @@ namespace iunit {
         runner->run(this, testCaseResult, _children, &errorProtector);
     }
     
-};
+}
 
 #endif /* end of include guard */

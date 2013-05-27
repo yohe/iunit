@@ -104,7 +104,7 @@ namespace iunit {
             std::string _methodName;
         };
 
-    };
-};
+    }
+}
 
 #endif /* end of include guard */

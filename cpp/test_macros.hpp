@@ -39,10 +39,10 @@
     IUNIT_DETAIL_CHECK_IMPL(expected, actual, __FILE__, __LINE__, < , Error)
 
 #define IUNIT_NULL( actual ) \
-    IUNIT_DETAIL_CHECK_IMPL(NULL, actual, __FILE__, __LINE__, ==, Error)
+    IUNIT_DETAIL_CHECK_IMPL((void*)0, actual, __FILE__, __LINE__, ==, Error)
 
 #define IUNIT_NOT_NULL( actual ) \
-    IUNIT_DETAIL_CHECK_IMPL(NULL, actual, __FILE__, __LINE__, !=, Error)
+    IUNIT_DETAIL_CHECK_IMPL((void*)0, actual, __FILE__, __LINE__, !=, Error)
 
 #define IUNIT_TRUE( condition ) \
     IUNIT_DETAIL_CHECK_IMPL(true, (condition), __FILE__, __LINE__, ==, Error)
@@ -77,10 +77,10 @@
     IUNIT_DETAIL_CHECK_IMPL(expected, actual, __FILE__, __LINE__, < , Assert)
 
 #define IUNIT_ASSERT_NULL( actual ) \
-    IUNIT_DETAIL_CHECK_IMPL(NULL, actual, __FILE__, __LINE__, ==, Assert)
+    IUNIT_DETAIL_CHECK_IMPL((void*)0, actual, __FILE__, __LINE__, ==, Assert)
 
 #define IUNIT_ASSERT_NOT_NULL( actual ) \
-    IUNIT_DETAIL_CHECK_IMPL(NULL, actual, __FILE__, __LINE__, !=, Assert)
+    IUNIT_DETAIL_CHECK_IMPL((void*)0, actual, __FILE__, __LINE__, !=, Assert)
 
 #define IUNIT_ASSERT_TRUE( condition ) \
     IUNIT_DETAIL_CHECK_IMPL(true, (condition), __FILE__, __LINE__, ==, Assert)

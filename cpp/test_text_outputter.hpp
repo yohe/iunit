@@ -90,7 +90,7 @@ namespace iunit {
         int _indentCount;
     };
 
-};
+}
 
 #endif /* end of include guard */
 

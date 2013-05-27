@@ -48,6 +48,6 @@ namespace iunit {
     protected:
     };
 
-};
+}
 
 #endif /* end of include guard */

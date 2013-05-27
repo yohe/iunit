@@ -53,7 +53,7 @@ namespace iunit {
             virtual void end(TestResult* result = NULL) = 0;
             virtual void write(TestResult* result) = 0;
         };
-    };
-};
+    }
+}
 
 #endif /* end of include guard */
