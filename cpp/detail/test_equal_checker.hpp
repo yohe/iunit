@@ -17,9 +17,9 @@ namespace iunit {
                     return false;
                 }
             }
-            template<class LT, class RT>
-            static bool equal(const LT* lhs, const RT* rhs) {
-                if(lhs == rhs) {
+            template<class LT>
+            static bool equalNull(const LT* lhs) {
+                if(lhs == (LT*)NULL) {
                     return true;
                 }
                 return true;

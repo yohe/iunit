@@ -7,6 +7,11 @@
     std::cout << message << std::endl; \
     test->currentResult()->addMessage(message);
 
+#define IUNIT_DETAIL_CHECK_NULL_IMPL(expected, actual, file, line, TYPE) \
+    { \
+        if(iunit::detail::EqualChecker::equalNull(actual) == expected) { \
+        } \
+    }
 
 #define IUNIT_DETAIL_CHECK_IMPL(expected, actual, file, line, OP, TYPE) \
     { \
