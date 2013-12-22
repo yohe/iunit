@@ -6,6 +6,8 @@
 #include <fstream>
 #include <sstream>
 
+using namespace clidevt;
+
 class IunitCommand : public Command {
     class OptionCheckFunctor {
         std::string optionName;
@@ -44,12 +46,11 @@ public:
     virtual ~IunitCommand() {}
 
     virtual std::string getKey() const { return "run"; }
-    virtual std::string printHelp() const { return "Execute bin/cpp/iunitdemo_cpp."; }
-    virtual std::string execute(std::string parameter) const {
+    virtual void printHelp() const { std::cout << "Execute bin/cpp/iunitdemo_cpp." << std::endl; }
+    virtual void execute(std::string parameter) {
         std::string cmd = _cmd;
         cmd += parameter;
         system(cmd.c_str());
-        return "";
     }
     virtual void getParamCandidates(std::vector<std::string>& inputtedList, std::string inputting, std::vector<std::string>& candidates) const {
         if(inputting.find("--exclude=") != std::string::npos) {
@@ -162,8 +163,8 @@ public:
     virtual ~ExitCommand() {}
 
     virtual std::string getKey() const { return "exit"; }
-    virtual std::string printHelp() const { return "console exit."; }
-    virtual std::string execute(std::string parameter) const { _console->actionTerminate(); return ""; }
+    virtual void printHelp() const { std::cout << "console exit." << std::endl; }
+    virtual void execute(std::string parameter) { _console->actionTerminate(); }
     virtual void getParamCandidates(std::vector<std::string>& inputtedList, std::string inputting, std::vector<std::string>& matchList) const {
     }
 
@@ -209,39 +210,39 @@ void Console::printTitle() {
 void Console::keyBindInitialize() {
 
     // Delete Character
-    _keyBindMap.insert(std::pair<KeyCode::Code, Action>(KeyCode::KEY_BS, &Console::actionDeleteBackwardCharacter));
-    _keyBindMap.insert(std::pair<KeyCode::Code, Action>(KeyCode::KEY_DEL, &Console::actionDeleteForwardCharacter));
-    _keyBindMap.insert(std::pair<KeyCode::Code, Action>(KeyCode::KEY_CTRL_K, &Console::actionDeleteFromCursorToEnd));
-    _keyBindMap.insert(std::pair<KeyCode::Code, Action>(KeyCode::KEY_CTRL_U, &Console::actionDeleteFromHeadToCursor));
-    _keyBindMap.insert(std::pair<KeyCode::Code, Action>(KeyCode::KEY_CTRL_L, &Console::actionClearScreen));
-    _keyBindMap.insert(std::pair<KeyCode::Code, Action>(KeyCode::KEY_CTRL_S, &Console::actionClearLine));
-    _keyBindMap.insert(std::pair<KeyCode::Code, Action>(KeyCode::KEY_CTRL_G, &Console::actionDeleteParam));
+    registerKeyBinding(KeyCode::KEY_BS, &Console::actionDeleteBackwardCharacter);
+    registerKeyBinding(KeyCode::KEY_DEL, &Console::actionDeleteForwardCharacter);
+    registerKeyBinding(KeyCode::KEY_CTRL_K, &Console::actionDeleteFromCursorToEnd);
+    registerKeyBinding(KeyCode::KEY_CTRL_U, &Console::actionDeleteFromHeadToCursor);
+    registerKeyBinding(KeyCode::KEY_CTRL_L, &Console::actionClearScreen);
+    registerKeyBinding(KeyCode::KEY_CTRL_S, &Console::actionClearLine);
+    registerKeyBinding(KeyCode::KEY_CTRL_G, &Console::actionDeleteParam);
 
-    // Complete
-    _keyBindMap.insert(std::pair<KeyCode::Code, Action>(KeyCode::KEY_TAB, &Console::actionComplete));
-    _keyBindMap.insert(std::pair<KeyCode::Code, Action>(KeyCode::KEY_CTRL_SPACE, &Console::actionComplete));
+    // Comerplete
+    registerKeyBinding(KeyCode::KEY_TAB, &Console::actionComplete);
+    registerKeyBinding(KeyCode::KEY_CTRL_SPACE, &Console::actionComplete);
 
-    // History select
-    _keyBindMap.insert(std::pair<KeyCode::Code, Action>(KeyCode::KEY_UP_ARROW, &Console::actionBackwardHistory));
-    _keyBindMap.insert(std::pair<KeyCode::Code, Action>(KeyCode::KEY_ALT_K, &Console::actionBackwardHistory));
-    _keyBindMap.insert(std::pair<KeyCode::Code, Action>(KeyCode::KEY_DOWN_ARROW, &Console::actionForwardHistory));
-    _keyBindMap.insert(std::pair<KeyCode::Code, Action>(KeyCode::KEY_ALT_J, &Console::actionForwardHistory));
+    // Hisertory select
+    registerKeyBinding(KeyCode::KEY_UP_ARROW, &Console::actionBackwardHistory);
+    registerKeyBinding(KeyCode::KEY_ALT_K, &Console::actionBackwardHistory);
+    registerKeyBinding(KeyCode::KEY_DOWN_ARROW, &Console::actionForwardHistory);
+    registerKeyBinding(KeyCode::KEY_ALT_J, &Console::actionForwardHistory);
 
-    // cursor move
-    _keyBindMap.insert(std::pair<KeyCode::Code, Action>(KeyCode::KEY_RIGHT_ARROW, &Console::actionMoveCursorRight));
-    _keyBindMap.insert(std::pair<KeyCode::Code, Action>(KeyCode::KEY_CTRL_F, &Console::actionMoveCursorRight));
-    _keyBindMap.insert(std::pair<KeyCode::Code, Action>(KeyCode::KEY_LEFT_ARROW, &Console::actionMoveCursorLeft));
-    _keyBindMap.insert(std::pair<KeyCode::Code, Action>(KeyCode::KEY_CTRL_B, &Console::actionMoveCursorLeft));
-    _keyBindMap.insert(std::pair<KeyCode::Code, Action>(KeyCode::KEY_CTRL_A, &Console::actionMoveCursorTop));
-    _keyBindMap.insert(std::pair<KeyCode::Code, Action>(KeyCode::KEY_CTRL_E, &Console::actionMoveCursorBottom));
+    // curersor move
+    registerKeyBinding(KeyCode::KEY_RIGHT_ARROW, &Console::actionMoveCursorRight);
+    registerKeyBinding(KeyCode::KEY_CTRL_F, &Console::actionMoveCursorRight);
+    registerKeyBinding(KeyCode::KEY_LEFT_ARROW, &Console::actionMoveCursorLeft);
+    registerKeyBinding(KeyCode::KEY_CTRL_B, &Console::actionMoveCursorLeft);
+    registerKeyBinding(KeyCode::KEY_CTRL_A, &Console::actionMoveCursorTop);
+    registerKeyBinding(KeyCode::KEY_CTRL_E, &Console::actionMoveCursorBottom);
 
 
-    // command execute
-    _keyBindMap.insert(std::pair<KeyCode::Code, Action>(KeyCode::KEY_CR, &Console::actionEnter));
-    _keyBindMap.insert(std::pair<KeyCode::Code, Action>(KeyCode::KEY_CTRL_N, &Console::actionMoveCursorForwardParam));
-    _keyBindMap.insert(std::pair<KeyCode::Code, Action>(KeyCode::KEY_CTRL_P, &Console::actionMoveCursorBackwardParam));
+    // comermand execute
+    registerKeyBinding(KeyCode::KEY_CR, &Console::actionEnter);
+    registerKeyBinding(KeyCode::KEY_CTRL_N, &Console::actionMoveCursorForwardParam);
+    registerKeyBinding(KeyCode::KEY_CTRL_P, &Console::actionMoveCursorBackwardParam);
 
-    // CTRL-C
-    _keyBindMap.insert(std::pair<KeyCode::Code, Action>(KeyCode::KEY_CTRL_C, &Console::actionTerminate));
+    // CTRerL-C
+    registerKeyBinding(KeyCode::KEY_CTRL_C, &Console::actionTerminate);
 }
 
