@@ -17,7 +17,9 @@ namespace iunit {
                 _success(0),
                 _failed(0),
                 _checkTotal(0),
-                _runTime(0)
+                _runTime(0),
+                _errFile(""),
+                _errLine(0)
             {
             }
             
@@ -74,7 +76,7 @@ namespace iunit {
                 }
                 _oss << str;
             }
-            void setException(const char* exception) {
+            void setException(const std::string& exception) {
                 _exceptionMessage = exception;
             }
             
@@ -89,6 +91,19 @@ namespace iunit {
                 os << "Name = " << _testName << " success = " << _success
                    << " failed = " << _failed << std::endl;
             }
+
+            void setErrorFilename(std::string filename) {
+                _errFile = filename;
+            }
+            std::string getErrorFilename() const {
+                return _errFile;
+            }
+            void setErrorLine(size_t line) {
+                _errLine = line;
+            }
+            size_t getErrorLine() const {
+                return _errLine;
+            }
             
             std::string _testName;
             size_t _success;
@@ -98,6 +113,8 @@ namespace iunit {
             std::ostringstream _oss;
             std::string _exceptionMessage;
             double _runTime;
+            std::string _errFile;
+            size_t _errLine;
             
         };
     }

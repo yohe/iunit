@@ -76,9 +76,13 @@ namespace iunit {
                     result->set(test, 1, 0);
                 } catch (TestException& e) {
                     e.setTestName(test);
+                    // what() は 行数含めた内容
+                    // message() は exceptionメッセージのみ
                     util::printException(e.what());
-                    result->setException(e.what());
+                    result->setException(e.message());
                     result->set(test, 0, 1);
+                    result->setErrorFilename(e.file());
+                    result->setErrorLine(e.line());
                     throw;
                 } catch (std::exception& e) {
                     result->setException(e.what());

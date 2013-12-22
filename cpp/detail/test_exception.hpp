@@ -3,6 +3,7 @@
 
 #include <string>
 #include <sstream>
+#include <exception>
 
 namespace iunit {
     namespace detail {
@@ -19,7 +20,7 @@ namespace iunit {
             {
             }
 
-            virtual ~TestException() {}
+            virtual ~TestException() throw() {}
 
             std::string testName() const {
                 return _testName;
@@ -40,8 +41,9 @@ namespace iunit {
                 return _line;
             }
             
-            const char* what() const {
-                std::stringstream ss;
+            virtual const char* what() const throw() {
+                static std::stringstream ss;
+                ss.str("");
                 ss << _file << "(" << _line << ")" << std::endl;
                 ss << _message;
                 return ss.str().c_str();
@@ -63,10 +65,11 @@ namespace iunit {
             {
             }
 
-            virtual ~AssertException() {}
+            virtual ~AssertException() throw() {}
             
-            const char* what() const {
-                std::stringstream ss;
+            virtual const char* what() const throw() {
+                static std::stringstream ss;
+                ss.str("");
                 ss << "!!! Assertion !!!" << std::endl;
                 ss << TestException::what();
                 return ss.str().c_str();
@@ -86,7 +89,7 @@ namespace iunit {
             {
             }
 
-            virtual ~ErrorException() {}
+            virtual ~ErrorException() throw() {}
 
             static std::string getExceptionType() {
                 return "Error";

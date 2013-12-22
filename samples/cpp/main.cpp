@@ -4,10 +4,12 @@
 #include <test_case.hpp>
 #include <test_text_outputter.hpp>
 #include <test_junit_outputter.hpp>
+#include <test_compiler_outputter.hpp>
 #include <test_macros.hpp>
 #include <test_config.hpp>
 #include <test_io_tester.hpp>
 
+#include <unistd.h>
 #include <fstream>
 #include <exception>
 
@@ -37,13 +39,13 @@ public:
     void test_1() {
         IUNIT_MESSAGE( "Test 1 Start" );
         int* a = new int(1);
-        IUNIT_EQ(2, value());
+        IUNIT_EQ(3, value());
         IUNIT_ASSERT_EQ(2, value());
         IUNIT_NE(3, value());
         IUNIT_ASSERT_NE(value(), 3);
         IUNIT_MESSAGE("int* a = new int(1)");
-        IUNIT_NULL(NULL);
-        IUNIT_ASSERT_NULL(NULL);
+        IUNIT_NULL((void*)NULL);
+        IUNIT_ASSERT_NULL((void*)NULL);
         IUNIT_NOT_NULL(a);
         IUNIT_ASSERT_NOT_NULL(a);
         delete a;
@@ -72,11 +74,13 @@ public:
         IUNIT_NO_THROW(value());
         IUNIT_ASSERT_THROW(throwException(), std::exception);
         IUNIT_ASSERT_NO_THROW(value());
+        //int* a = 0;
         //IUNIT_NO_THROW(throwException());
         //IUNIT_THROW(value(), std::exception);
         //IUNIT_ASSERT_NO_THROW(throwException());
         //IUNIT_ASSERT_THROW(value(), std::exception);
-        //IUNIT_TEST(a)_Should_EQ((int*)0);
+        //IUNIT_TEST(a)_Should_((int*)0);
+        //IUNIT_TEST(a)_Should_((int*)1);
         //IUNIT_TEST(a)_Should_NE((int*)0);
         //IUNIT_TEST(a)_Should_THROW((int*)0);
         //IUNIT_TEST(a)_Should_NOT_THROW((int*)0);
@@ -144,8 +148,6 @@ public:
         XyzFunctor func(this);
         IOPatternTester<PatternData, bool, XyzFunctor> tester(spec, func, "XyzPatternTest");
         IUNIT_PATTERN_TESTER(tester);
-
-        sleep(2);
     }
 
     bool xyz(int x, int y, int z) {
@@ -223,8 +225,10 @@ int main(int argc, char const* argv[])
     std::ofstream ofs("result.txt");
     TextOutputter outputter(ofs);
     JUnitOutputter outputter2(xml_ofs);
+    CompilerOutputter outputter3(std::cout);
     collector.write(&outputter);
     collector.write(&outputter2);
+    collector.write(&outputter3);
     return (collector.isSuccessful() ? 0 : -1);
 }
 

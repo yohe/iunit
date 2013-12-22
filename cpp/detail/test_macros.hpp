@@ -20,8 +20,8 @@
         } else { \
             this->failed(); \
             std::stringstream ss; \
-            ss << #TYPE << " :            " << #expected << " " << #OP << " " << #actual \
-               << " condition equation did not pass." << std::endl; \
+            ss << #TYPE << ": \"" << #expected << " " << #OP << " " << #actual \
+               << "\" condition equation did not pass." << std::endl; \
             ss << "        expected : " << expected << " "#OP" "#actual << std::endl;\
             ss << "          actual : "#actual" = " << actual; \
             throw detail::TYPE ## Exception(ss.str(), file, line); \

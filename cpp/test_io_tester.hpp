@@ -19,12 +19,12 @@ namespace iunit {
              typename ExceptionType = detail::ErrorException>
     class IOPatternTester {
         typedef std::vector<std::pair<In, Out> > Spec;
-        Spec _spec;
+        Spec& _spec;
         Functor _func;
         std::string _testName;
 
     public:
-        IOPatternTester(std::vector<std::pair<In, Out> > spec,
+        IOPatternTester(Spec& spec,
                         Functor func,
                         std::string testName) :
             _spec(spec),
