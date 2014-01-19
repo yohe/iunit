@@ -2,6 +2,7 @@
 #define IUNIT_CPP_DETAIL_TEST_TIMER_HPP
 
 #include <sys/time.h>
+#include <string>
 
 namespace iunit {
     namespace detail {
@@ -16,9 +17,26 @@ namespace iunit {
                 gettimeofday(&t, NULL);
                 return (double)t.tv_sec + ((double)t.tv_usec * 1e-6);
             }
+            void now_tm(tm* timestamp) const {
+                time_t rawtime;
+                time(&rawtime);
+                struct tm* src = NULL;
+                src = localtime(&rawtime);
+                copy_tm(src, timestamp);
+            }
 
         private:
-
+            void copy_tm(tm* src, tm* dst) const {
+                dst->tm_sec = src->tm_sec;
+                dst->tm_min = src->tm_min;
+                dst->tm_hour = src->tm_hour;
+                dst->tm_mday = src->tm_mday;
+                dst->tm_mon = src->tm_mon;
+                dst->tm_year = src->tm_year;
+                dst->tm_wday = src->tm_wday;
+                dst->tm_yday = src->tm_yday;
+                dst->tm_isdst = src->tm_isdst;
+            }
         };
 
         class CountUpTimer : public Timer {
