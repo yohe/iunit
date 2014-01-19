@@ -23,7 +23,7 @@ namespace iunit {
                 return;
             }
             if(_indentCount == 0) {
-                _os << "<testsuites name=\"" << result->_testName << "\">" << std::endl;
+                _os << "<testsuites>" << std::endl;
             } else {
 
                 std::string indent;
@@ -32,11 +32,16 @@ namespace iunit {
                 }
                 size_t tests = result->_success + result->_failed;
                 _os << indent 
-                    << "<testsuite tests=\"" << tests
-                    << "\" errors=\"" << result->_failed
-                    << "\" name=\"" << result->testName()
-                    << "\" time=\"" << result->getRunTime()
-                    << "\" id=\"" << _index << "\" >" << std::endl;
+                    << "<testsuite tests=\"" << tests << "\""
+                    << " name=\"" << result->testName() << "\""
+                    << " time=\"" << result->getRunTime() << "\""
+                    << " id=\"" << _index << "\""
+                    << " package=\"\""
+                    << " timestamp=\"" << createTimestamp(&result->_timestamp) << "\""
+                    << " hostname=\"localhost\""
+                    << " errors=\"" << result->_failed << "\""
+                    << " failures=\"0\""
+                    << " >" << std::endl;
 
                 _os << indent << indent << "<properties />" << std::endl;
 
@@ -64,17 +69,16 @@ namespace iunit {
                 << "\">" << std::endl;
 
             if(!result->isSuccess()) {
-                _os  << indent << "  <failure message=\""
-                     << result->exceptionMessage()
-                     << "\" type=\"\">"
-                     << std::endl;
-                //_os << result->message() << std::endl;
+                _os << indent << "  <failure message=\"\" type=\"\""
+                    << " >" << std::endl;
+                _os << result->exceptionMessage()
+                    << std::endl;
                 _os << indent << "  </failure>" << std::endl;
             }
-            _os << indent << indent << "<system-out>" << std::endl;
-            _os << result->message() << std::endl;
-            _os << indent << indent << "<system-out />" << std::endl;
-            _os << indent << indent << "<system-err />" << std::endl;
+            //_os << indent << "  <system-out>" << std::endl;
+            //_os << result->message() << std::endl;
+            //_os << indent << "  </system-out>" << std::endl;
+            //_os << indent << "  <system-err />" << std::endl;
             _os << indent << "</testcase>" << std::endl;
         }
 
@@ -106,6 +110,12 @@ namespace iunit {
                 message.insert(pos+1, indent);
                 pos = message.find('\n', pos+1+indent.size());
             }
+        }
+
+        virtual std::string createTimestamp(tm* timestamp) {
+            static char str[256];
+            strftime(str, 255, "%Y-%m-%dT%H:%M:%S", timestamp);
+            return std::string(str);
         }
 
     private:
