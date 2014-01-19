@@ -56,26 +56,26 @@
         } \
     }
 
-//#define IUNIT_DETAIL_CHECK_IMPL_TEST(actual, file, line) \
-//    { \
+//#define IUNIT_DETAIL_CHECK_IMPL_TEST(actual, file, line)
+//    { 
 //        iunit::detail::CheckFunctor obj(#actual, file, line);IUNIT_DETAIL_EXPECTED_2(actual)
 //    
-//#define IUNIT_DETAIL_EXPECTED_2(actual) \
+//#define IUNIT_DETAIL_EXPECTED_2(actual) 
 //    if( obj(actual, 
 //
-//#define _Should_(expected) \
-//    expected) ) { \
-//    } else { \
-//        this->failed(); \
-//        std::stringstream ss; \
-//        throw detail::ErrorException(ss.str(), file, line); \
+//#define _Should_(expected) 
+//    expected) ) { 
+//    } else { 
+//        this->failed(); 
+//        std::stringstream ss; 
+//        throw detail::ErrorException(ss.str(), file, line); 
 //    }
 //
-//#define _Should_Throw_(expected) \
-//    expected); \
+//#define _Should_Throw_(expected) 
+//    expected); 
 //    }
 
-//#define IUNIT_DETAIL_EXPECTED( expected ) \
+//#define IUNIT_DETAIL_EXPECTED( expected ) 
 //    obj(actual, expected);
 
 #endif /* end of include guard */

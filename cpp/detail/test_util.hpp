@@ -6,6 +6,7 @@
 #include <iostream>
 #include <ostream>
 #include <set>
+#include <sys/time.h>
 
 #include "detail/test_exception.hpp"
 #include "detail/test_timer.hpp"
@@ -45,6 +46,9 @@ namespace iunit {
             public:
                 TestReporter(TestResult* result) : _result(result) {
                     printStartTest(_result->testName());
+                    struct tm data;
+                    watch.now_tm(&data);
+                    _result->setTimestamp(data);
                     watch.set();
                 }
                 ~TestReporter() {

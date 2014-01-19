@@ -1,6 +1,8 @@
 #ifndef IUNIT_CPP_DETAIL_TEST_RESULT_HPP
 #define IUNIT_CPP_DETAIL_TEST_RESULT_HPP
 
+#include <sys/time.h>
+
 #include <vector>
 #include <string>
 #include <sstream>
@@ -19,7 +21,8 @@ namespace iunit {
                 _checkTotal(0),
                 _runTime(0),
                 _errFile(""),
-                _errLine(0)
+                _errLine(0),
+                _timestamp()
             {
             }
             
@@ -64,6 +67,16 @@ namespace iunit {
 
             void setRunTime(double time) {
                 _runTime = time;
+            }
+            void setTimestamp(tm time) {
+                std::cout << time.tm_year << ":"
+                          << time.tm_mon << ":"
+                          << time.tm_mday << ":"
+                          << time.tm_hour << ":"
+                          << time.tm_min << ":"
+                          << time.tm_sec << ":"
+                          << std::endl;
+                _timestamp = time;
             }
 
             std::ostream& getOstream() {
@@ -115,7 +128,7 @@ namespace iunit {
             double _runTime;
             std::string _errFile;
             size_t _errLine;
-            
+            tm _timestamp;
         };
     }
 }
