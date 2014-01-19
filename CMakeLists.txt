@@ -14,7 +14,7 @@ ENDIF(APPLE)
 make_directory(bin/cpp)
 ADD_EXECUTABLE(bin/cpp/iunitdemo_cpp samples/cpp/main.cpp)
 
-set_target_properties(bin/cpp/iunitdemo_cpp PROPERTIES COMPILE_FLAGS "-Wall -I ./cpp")
+set_target_properties(bin/cpp/iunitdemo_cpp PROPERTIES COMPILE_FLAGS "-Wall -pedantic -I ./cpp")
 
 set(CMAKE_CXX_FLAGS_DEBUG "-g")
 
